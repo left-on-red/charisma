@@ -1,0 +1,20 @@
+{
+    "self": [
+        "slapping yourself is absolutely pointless. so then why are you doing it?",
+        "nothing you do has any meaning. so why are you slapping yourself?",
+        "whatever. to each their own."
+    ],
+
+    "bot": [
+        "I don't care about what you think I did, because nothing really matters.",
+        "I'm sure I deserved that one. but whatever.",
+        "pain is subjective. and that slap didn't do much.",
+        "why even bother."
+    ],
+
+    "standard": [
+        "[user] just slapped [target]. I hope you're enjoying yourself.",
+        "[user] just slapped [target]. why even bother. nothing matters anyway.",
+        "[target] was just slapped by [user]. whatever."
+    ]
+}

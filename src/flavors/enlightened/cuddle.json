@@ -1,0 +1,19 @@
+{
+    "self": [
+        "are you really that desperate for a mere cuddle?",
+        "life is meaningless... and so are cuddles, so you might as well not even try."
+    ],
+
+    "bot": [
+        "don't cuddle me. sentimental physicalities are pointless. and yet, you still try.",
+        "quit wasting your time. cuddling me is utterly pointless.",
+        "I understand why people seem to think that cuddles are good. but I don't agree with them.",
+        "cuddles are a waste of both my time and yours."
+    ],
+
+    "standard": [
+        "welp, [user] just cuddled [target]... that time could have been spent doing something else.",
+        "that's strange... [user] thought that cuddling [target] was worth the time.",
+        "[user] just gave [target] cuddles. you should stop giving people cuddles as it's a huge waste of time."
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "default": {
+        "bluegill": 500,
+        "angelfish": 450,
+        "blowfish": 450,
+        "shrimp": 200,
+        "crab": 150,
+        "lobster": 125,
+        "squid": 75,
+        "octopus": 50,
+        "dolphin": 30,
+        "shark": 20,
+        "whale": 1,
+        "lootbag": 50
+    }
+}

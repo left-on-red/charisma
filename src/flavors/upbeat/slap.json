@@ -1,0 +1,21 @@
+{
+    "self": [
+        "oh no! why would you slap yourself?",
+        "huh? no, don't do that",
+        "nonono, please don't do that ;-;",
+        "noooo! don't slap yourself"
+    ],
+
+    "bot": [
+        "owwww! what did I do to deserve that!?! *hmmph*",
+        "hey! what was that for?",
+        "ow! that kinda hurt...",
+        "what? why would you slap me like that?"
+    ],
+
+    "standard": [
+        "[user] just slapped [target]. I hope they actually deserved it",
+        "[user] just slapped [target]. I kinda feel bad for [target]",
+        "[target] was just slapped by [user]. that's not good"
+    ]
+}

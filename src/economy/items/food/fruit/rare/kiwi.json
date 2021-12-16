@@ -1,0 +1,15 @@
+{
+    "emoji": ":kiwi:",
+    "value": 150,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 172800000,
+        "harvest": 21600000,
+        "fail": 25,
+        "death": 35,
+        "yield": [5, 7]
+    },
+
+    "tags": ["rare", "food", "fruit"]
+}

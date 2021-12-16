@@ -1,0 +1,21 @@
+{
+    "fishing": {
+        "cookie": 500,
+        "bacon": 300,
+
+        "grapes": 50,
+        "kiwi": 50,
+        "pineapple": 50,
+    
+        "banana": 10,
+        "lemon": 10,
+        "mango": 10,
+        "strawberry": 10,
+
+        "bait": 50,
+
+        "tome": 5,
+        "diamond": 5,
+        "chair": 1
+    }
+}

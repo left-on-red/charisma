@@ -1,0 +1,20 @@
+{
+    "self": [
+        "oh no. don't you have someone that you can kiss?",
+        "nonono, don't be like that",
+        "that's not good"
+    ],
+
+    "bot": [
+        "omg, I don't know what I did to deserve it, but thank you!",
+        ":blush: am I allowed to accept kisses?",
+        "omigosh, I like kisses!"
+    ],
+
+    "standard": [
+        "[user] just gave [target] a kiss. that's nice",
+        "[target] just got a kiss from [user]! *that's sooo cuuuuute~!*",
+        "omigosh yas! [user] just kissed [target]! *I think I can see some chemistry brewing :3*",
+        "[target] was just kissed by [user]! that's so nice"
+    ]
+}

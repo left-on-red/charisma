@@ -1,0 +1,20 @@
+{
+    "self": [
+        "oh... that's unfortunate...",
+        "I'd give you a kiss... if I ummm... wasn't so nervous...",
+        "oh no... don't be like that..."
+    ],
+
+    "bot": [
+        ":flustered: w-what did I do to deserve that...?",
+        "u-ummm... t-thank you...?",
+        "I... I don't know how to respond to that..."
+    ],
+
+    "standard": [
+        "[user] just gave [target] a kiss... that's nice...",
+        "[target] just got a kiss from [user]... I'm glad you two are getting along...",
+        "omigosh yas! [user] just kissed [target]... that's good to see...",
+        "[target] was just kissed by [user]... I'm glad you two are happy with each other..."
+    ]
+}

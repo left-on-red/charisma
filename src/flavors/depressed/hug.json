@@ -1,0 +1,20 @@
+{
+    "self": [
+        "at least youre content with being all alone...",
+        "well... a hugs a hug i guess...",
+        "..."
+    ],
+
+    "bot": [
+        "{expression}...",
+        "ummm...",
+        "thanks, i guess...",
+        "i needed that... {sad}"
+    ],
+
+    "standard": [
+        "[user] just hugged [target]... {sad}",
+        "[target] got a hug from [user]... {expression}... {sad}",
+        "[user] hugged [target]... {expression}..."
+    ]
+}

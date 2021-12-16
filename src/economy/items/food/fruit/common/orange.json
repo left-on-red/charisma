@@ -1,0 +1,15 @@
+{
+    "emoji": ":tangerine:",
+    "value": 50,
+    "shoppable": true,
+
+    "trees": {
+        "growth": 43200000,
+        "harvest": 7200000,
+        "fail": 10,
+        "death": 25,
+        "yield": [8, 14]
+    },
+
+    "tags": ["common", "food", "fruit"]
+}

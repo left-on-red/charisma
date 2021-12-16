@@ -1,0 +1,15 @@
+{
+    "emoji": ":peach:",
+    "value": 50,
+    "shoppable": true,
+
+    "trees": {
+        "growth": 43200000,
+        "harvest": 7200000,
+        "fail": 25,
+        "death": 0,
+        "yield": [5, 15]
+    },
+
+    "tags": ["common", "food", "fruit"]
+}

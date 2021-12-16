@@ -1,0 +1,21 @@
+{
+    "self": [
+        "oh... why did you do that...?",
+        "thats not good...",
+        "how sad...",
+        "{sad}"
+    ],
+
+    "bot": [
+        "i deserved that... didnt i...",
+        "what did i do...?",
+        "that kinda hurt...",
+        "{sad}"
+    ],
+
+    "standard": [
+        "[user] just slapped [target]... that sucks...",
+        "[user] just slapped [target]... how sad...",
+        "[target] was just slapped by [user]... how unfortunate... {sad}"
+    ]
+}

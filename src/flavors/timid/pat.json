@@ -1,0 +1,20 @@
+{
+    "self": [
+        "don't be like that... I'll give you a pat if you want...",
+        "I-I don't how how to respond...",
+        "I'm sorry nobody else would give you a pat...",
+        "oh... do you really want a pat that badly...?"
+    ],
+
+    "bot": [
+        "thanks... but I think you messed up my hair a little bit...",
+        "I don't know what to say... t-thank you... I think...",
+        "I don't know how to respond to that... thanks for the pat I guess...",
+        "ummm... thanks for the pat..."
+    ],
+
+    "standard": [
+        "[user] just gave [target] a pat... ummm... is this a normal occurance...?",
+        "[target] just got a pat from [user]... that was nice of [user]..."
+    ]
+}

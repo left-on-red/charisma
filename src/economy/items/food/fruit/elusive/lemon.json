@@ -1,0 +1,15 @@
+{
+    "emoji": ":lemon:",
+    "value": 200,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 57600000,
+        "harvest": 7200000,
+        "fail": 0,
+        "death": 0,
+        "yield": [10, 10]
+    },
+
+    "tags": ["elusive", "food", "fruit"]
+}

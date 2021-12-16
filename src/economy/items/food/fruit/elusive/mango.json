@@ -1,0 +1,15 @@
+{
+    "emoji": ":mango:",
+    "value": 500,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 172800000,
+        "harvest": 28800000,
+        "fail": 25,
+        "death": 50,
+        "yield": [10, 20]
+    },
+
+    "tags": ["elusive", "food", "fruit"]
+}

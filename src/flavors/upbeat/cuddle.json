@@ -1,0 +1,19 @@
+{
+    "self": [
+        "oh no, don't be like that.",
+        "I can cuddle you if you want."
+    ],
+
+    "bot": [
+        "awww, that's really nice of you.",
+        "yay, free cuddles!",
+        "cuddles are awesome! thank you so much!",
+        "cuddles are the best thing in the entire world!"
+    ],
+
+    "standard": [
+        "awww, [user] just cuddled [target]! that's nice.",
+        "[target] just got cuddled by [user]! that's really cute!",
+        "[user] just cuddled [target]! that's awesome!"
+    ]
+}

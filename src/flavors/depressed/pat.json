@@ -1,0 +1,19 @@
+{
+    "self": [
+        "*sigh*...",
+        "at least you're happy..."
+    ],
+
+    "bot": [
+        "thanks... i guess...",
+        "cool...",
+        "hmmm...",
+        "thats nice of you..."
+    ],
+
+    "standard": [
+        "ummm... [user] just pat [target]... how nice... {sad}",
+        "[target] just got a pat from [user]... i wish someone would give me a pat... {sad}",
+        "cool... [user] pat [target]..."
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "self": [
+        "at least youre content with being all alone...",
+        "well... a cuddles a cudd;e i guess...",
+        "...",
+        "... {sad}"
+    ],
+
+    "bot": [
+        "{expression}...",
+        "ummm...",
+        "thanks, i guess...",
+        "i needed that... {sad}"
+    ],
+
+    "standard": [
+        "[user] just cuddled [target]... {sad}",
+        "[target] was just cuddled by [user]... {expression}... {sad}",
+        "[user] cuddled [target]... {expression}..."
+    ]
+}

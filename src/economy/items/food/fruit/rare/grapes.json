@@ -1,0 +1,15 @@
+{
+    "emoji": ":grapes:",
+    "value": 100,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 129600000,
+        "harvest": 10800000,
+        "fail": 35,
+        "death": 35,
+        "yield": [8, 15]
+    },
+
+    "tags": ["rare", "food", "fruit"]
+}

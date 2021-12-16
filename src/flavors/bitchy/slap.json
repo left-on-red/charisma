@@ -1,0 +1,22 @@
+{
+    "self": [
+        "honestly, I'm fine with that",
+        "weirdo",
+        "freak",
+        "what a {insults}",
+        "{insults}"
+    ],
+
+    "bot": [
+        "wtf you little {insults}",
+        "fuck off!",
+        "you're dead",
+        "I'm gonna make you meet your maker"
+    ],
+
+    "standard": [
+        "[user] just slapped [target]. serves 'em right",
+        "[user] just slapped [target] lmao. I kinda feel bad for [target]. actually, no I don't lol",
+        "[target] was just slapped by [user]. they deserved it"
+    ]
+}

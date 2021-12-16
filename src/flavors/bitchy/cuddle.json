@@ -1,0 +1,23 @@
+{
+    "self": [
+        "look at this {insults} trynna cuddle theirself lmao",
+        "lmao, sucks to suck",
+        "{insults}",
+        "what a {insults}",
+        "I hope you die alone!"
+    ],
+
+    "bot": [
+        "ewwww! I hate cuddles!",
+        "get off me loser!",
+        "I think I contracted aids from your cuddles!",
+        "you sick fuck!",
+        "get off me you {insults}!"
+    ],
+
+    "standard": [
+        "omg, [user] just cuddled [target]! why would you even do that!?",
+        "sicko! think you just gave [target] aids",
+        "what a {insults}! [user] just cuddled [target]. disgusting"
+    ]
+}

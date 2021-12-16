@@ -1,0 +1,18 @@
+{
+    "self": [
+        "you're only wasting your time.",
+        "pats are pointless. everything is pointless."
+    ],
+
+    "bot": [
+        "don't pat me.",
+        "what did you gain from patting me?",
+        "what's the point...",
+        "interesting..."
+    ],
+
+    "standard": [
+        "interesting... [user] thought that it was worthwhile to give [target] a pat.",
+        "[target] just got a pat from [user]. Don't waste other peoples time."
+    ]
+}

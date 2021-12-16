@@ -1,0 +1,59 @@
+{
+    "bitchy": {
+        "insults": [
+            "fucktard",
+            "slut",
+            "bitch",
+            "faggot",
+            "fag",
+            "pussy",
+            "piece of shit"
+        ]
+    },
+
+    "depressed": {
+        "sad": [
+            ":pensive:",
+            ":disappointed:",
+            ":worried:",
+            ":slight_frown:",
+            ":frowning2:",
+            ":persevere:",
+            ":frowning:",
+            ":anguished:",
+            ":cry:",
+            ":disappointed_relieved:",
+            ":sob:" 
+        ],
+
+        "expression": [
+            "cool...",
+            "that's cool, i guess...",
+            "nice...",
+            "that's nice, i guess...",
+            "how nice",
+            "yeah..."
+        ]
+    },
+
+    "enlightened": {
+
+    },
+
+    "horny": {
+
+    },
+
+    "timid": {
+        "surprised": [
+            ":flushed:",
+            ":confounded:",
+            ":scream:",
+            ":fearful:",
+            ":cold_sweat:"
+        ]
+    },
+
+    "upbeat": {
+    }
+}

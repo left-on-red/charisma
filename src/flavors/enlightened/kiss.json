@@ -1,0 +1,20 @@
+{
+    "self": [
+        "*sigh*, I hope you're enjoying yourself.",
+        "I'd give you a hug, but it doesn't matter. nothing matters.",
+        "correct me if I'm wrong, but aren't you supposed to kiss someone else? it's not like it matters anyway."
+    ],
+
+    "bot": [
+        "I don't understand sentimental emotions, but I appreciate the kind gesture. too bad everything's a facade.",
+        "thanks. too bad it was invein.",
+        "kisses don't mean anything. I hope you understand that."
+    ],
+
+    "standard": [
+        "[user] just gave [target] a kiss. such ignorance.",
+        "[target] just got a kiss from [user]. I hope you two are enjoying yourself.",
+        "that's peculiar. [user] just kissed [target] as if any of that mattered.",
+        "[target] was just kissed by [user]. affectionate gestures don't mean anything."
+    ]
+}

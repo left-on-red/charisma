@@ -1,0 +1,8 @@
+{
+    "token": "[your discord bot token goes here]",
+    "master": "[your discord user id goes here]",
+    "accent": "#8E6BFF",
+    "prefix": ";",
+    "sharding": false,
+    "variation": "lavender"
+}

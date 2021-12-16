@@ -1,0 +1,18 @@
+{
+    "self": [
+        "ummm... I'm sorry you're all alone...",
+        "don't be like that..."
+    ],
+
+    "bot": [
+        "ummm... I don't know what to say...",
+        "do you always cuddle people you don't know...? I'm not saying I'm opposed to it though...",
+        "thanks... ummm... I'm new to the whole cuddling thing...",
+        "I don't know how to respond..."
+    ],
+
+    "standard": [
+        "[user] just cuddled [target]... ummm... do you do that kind of thing often?",
+        "[target] just got cuddled by [user]... cool... I hope you ummm... enjoyed it..."
+    ]
+}

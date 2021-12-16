@@ -1,0 +1,15 @@
+{
+    "emoji": ":strawberry:",
+    "value": 100,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 172800000,
+        "harvest": 14400000,
+        "fail": 35,
+        "death": 35,
+        "yield": [20, 50]
+    },
+
+    "tags": ["elusive", "food", "fruit"]
+}

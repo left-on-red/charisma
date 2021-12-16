@@ -1,0 +1,20 @@
+{
+    "self": [
+        "awww, I'll give you a nice pat if you want.",
+        "oh, how sad... nobody's willing to give you a pat.",
+        "I'll pat you if you want.",
+        "Oh, here, have a pat, *patted [user]*"
+    ],
+
+    "bot": [
+        "omigosh thank you so much!",
+        "thank you for that pat!",
+        "that was nice of you!",
+        "I think you mighta messed up my hair, but I still loved that pat!"
+    ],
+
+    "standard": [
+        "[target] just got a pat from [user]! that was nice of [user]",
+        "[user] just gave [target] a pat! do you do that sort of thing often? if so, I love it!"
+    ]
+}

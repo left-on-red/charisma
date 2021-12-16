@@ -1,0 +1,15 @@
+{
+    "emoji": ":banana:",
+    "value": 150,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 129600000,
+        "harvest": 10800000,
+        "fail": 35,
+        "death": 40,
+        "yield": [10, 20]
+    },
+
+    "tags": ["elusive", "food", "fruit"]
+}

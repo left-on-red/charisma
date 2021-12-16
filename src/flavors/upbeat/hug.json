@@ -1,0 +1,19 @@
+{
+    "self": [
+        "oh no, don't be like that.",
+        "I can give you a hug if you wanted."
+    ],
+
+    "bot": [
+        "awww, that's nice of you.",
+        "yay, a free hug!",
+        "hugs are awesome!",
+        "hugs are the best thing in the entire world!"
+    ],
+
+    "standard": [
+        "awww, [user] just gave [target] a hug! that's nice.",
+        "[target] just got a hug from [user]!",
+        "[user] just hugged [target]! that's awesome!"
+    ]
+}

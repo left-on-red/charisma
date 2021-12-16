@@ -1,0 +1,18 @@
+{
+    "self": [
+        "ummm... I'm sorry you're all alone...",
+        "don't be like that..."
+    ],
+
+    "bot": [
+        "ummm... I don't know what to say...",
+        "do you always give hugs to people you don't know...?",
+        "thanks... ummm... I'm new to the whole hugging thing...",
+        "I don't know how to respond..."
+    ],
+
+    "standard": [
+        "[user] just hugged [target]... ummm... so do you do that often?",
+        "[target] just got a hug from [user]... cool... I hope you ummm... enjoyed it..."
+    ]
+}

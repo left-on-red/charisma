@@ -1,0 +1,15 @@
+{
+    "emoji": ":pineapple:",
+    "value": 125,
+    "shoppable": false,
+
+    "trees": {
+        "growth": 57600000,
+        "harvest": 14400000,
+        "fail": 0,
+        "death": 30,
+        "yield": [10, 13]
+    },
+
+    "tags": ["rare", "food", "fruit"]
+}
