@@ -31,6 +31,7 @@ module.exports = {
         let toReturn = { userPerms: true, botPerms: true, master: false }
 
         if (permission == 'MASTER') {
+            toReturn.userPerms = false;
             if (context.user.id == config.master) { toReturn.userPerms = true }
         }
 
