@@ -18,13 +18,11 @@ module.exports = class extends Command {
             let user = (await context.guild.members.fetch(parameters[0])).user;
             if (user.id == context.user.id) { embed.setDescription(`you can't pay yourself`); return context.channel.send({ embeds: [embed] }) }
 
-            let from = new context.inventory(context.user.id, context);
-            await from.init();
+            let from = await context.inventory.getMoney(context, context.user.id);
 
-            if (parameters[1] > from.money.get()) { embed.setDescription(`you don't have that much in your balance`); return context.channel.send({ embeds: [embed] }) }
+            if (parameters[1] > from) { embed.setDescription(`you don't have that much in your balance`); return context.channel.send({ embeds: [embed] }) }
 
-            let to = new context.inventory(user.id, context);
-            await to.init();
+            let to = await context.inventory.getMoney(context, user.id);
 
             if (parameters[1] > 5000) {
                 embed.setDescription(`you're attempting to pay someone more than **5000g**`);
@@ -33,14 +31,8 @@ module.exports = class extends Command {
                     response.setColor(context.config.bot.accent);
                     response.setDescription(`you payed **${user.tag} ${parameters[1]}g**~!`);
 
-                    await from.refresh();
-                    await to.refresh();
-
-                    await from.money.remove(parameters[1]);
-                    await to.money.add(parameters[1]);
-
-                    await from.append();
-                    await to.append();
+                    await context.inventory.removeMoney(context, context.user.id, parameters[1]);
+                    await context.inventory.addMoney(context, user.id, parameters[1]);
 
                     sent.edit({ embeds: [response] });
                 }, true);
@@ -49,11 +41,8 @@ module.exports = class extends Command {
             else {
                 embed.setDescription(`you payed **${user.tag} ${parameters[1]}g**~!`);
 
-                from.money.remove(parameters[1]);
-                to.money.add(parameters[1]);
-                
-                await from.append();
-                await to.append();
+                await context.inventory.removeMoney(context, context.user.id, parameters[1]);
+                await context.inventory.addMoney(context, user.id, parameters[1]);
                 
                 context.channel.send({ embeds: [embed] });
             }
