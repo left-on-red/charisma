@@ -33,9 +33,8 @@ module.exports = class extends Command {
                         inventory.items.remove(parameters[0], quantity);
                         let individuals = quantity == 1 ? '' : ` *(${Math.floor(total / quantity)}g each)*`;
     
-                        inventory.money.add(total);
                         await inventory.append();
-    
+                        await context.inventory.addMoney(context, context.user.id, total);
                         embed.setDescription(`you sold ${context.economy.items[parameters[0]].emoji}x${quantity} and got **${total}g**${individuals}`);
                     }
                 }
@@ -79,8 +78,8 @@ module.exports = class extends Command {
                             inventory.items.remove(parameters[0], quantity);
                             let individuals = quantity == 1 ? '' : ` *(${value}g each)*`;
 
-                            inventory.money.add(total);
-                            inventory.append();
+                            await inventory.append();
+                            await context.inventory.addMoney(context, context.user.id, total);
 
                             editEmbed.setDescription(`you sold ${context.economy.items[parameters[0]].emoji}x${quantity} and got **${total}g**${individuals}`)
                             sent.edit({ embeds: [editEmbed] });
