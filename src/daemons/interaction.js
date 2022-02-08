@@ -75,7 +75,7 @@ module.exports = async function(context) {
 
             let slash_context = new SlashContext(context, interaction, local);
             
-            if (context.slashes[interaction.commandName]) { context.slashes[interaction.commandName]._interaction(slash_context, interaction.options) }
+            if (context.slashes.get(interaction.commandName)) { context.slashes.get(interaction.commandName)._interaction(slash_context, interaction.options) }
         }
     });
 }
