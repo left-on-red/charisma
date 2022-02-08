@@ -1,8 +1,8 @@
 let Command = require('./../../core/Command.js');
 
-let profit_arrow = '<:profit_arrow:816149408855883787>';
-let loss_arrow = '<:loss_arrow:816153828381949953>';
-let neutral_dash = '<:neutral_dash:816168307493044224>';
+let profit_arrow = '<:profit_arrow:940457372701327430>';
+let loss_arrow = '<:loss_arrow:940457354607095808>';
+let neutral_dash = '<:neutral_dash:940457381832323182>';
 
 module.exports = class extends Command {
     constructor() {

@@ -7,8 +7,8 @@ let colors = {
 }
 
 let emoji = {
-    local: '751542184246771903',
-    global: '751542184418738216'
+    local: '940457346008760332',
+    global: '940457335523008522'
 }
 
 class ExperienceModule {
