@@ -20,7 +20,7 @@ module.exports = class extends Command {
             let newEmbed = new context.Discord.MessageEmbed();
             newEmbed.setColor(message.embeds[0].hexColor);
             newEmbed.setDescription(`${timestamp2 - timestamp1}ms`);
-            message.edit(newEmbed);
+            message.edit({ embeds: [newEmbed] });
         })
     }
 }
