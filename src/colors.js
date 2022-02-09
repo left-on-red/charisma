@@ -41,7 +41,7 @@ module.exports = {
         bright: bgcodes.slice(8, 16),
         rgb: bgcodes.slice(16, 232),
         grayscale: bgcodes.slice(232, 256),
-        getRGB: function (r, g, b) { return bg.rgb[36*r + 6*g + b] },
+        getRGB: function (r, g, b) { return this.rgb[36*r + 6*g + b] },
         wrap: function(string, color) { return `${this.getRGB(color[0], color[1], color[2])}${string}\x1b[0m` }
     },
 

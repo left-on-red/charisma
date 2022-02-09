@@ -1,6 +1,7 @@
 let fs = require('fs');
 let Discord = require('discord.js');
 let Configs = require('./Configs.js');
+let LoggingManager = require('./LoggingManager.js');
 
 class BotContext {
     /**
@@ -9,6 +10,9 @@ class BotContext {
      */
     constructor(client) {
         this.client = client;
+
+        this.logging = new LoggingManager();
+        this.system = this.logging.getReference('system');
 
         this.buffers = {
             local_arrow: fs.readFileSync(`${__dirname}/../images/local_arrow.png`),

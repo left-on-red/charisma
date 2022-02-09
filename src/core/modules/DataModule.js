@@ -57,9 +57,9 @@ class DataModule {
         for (let g = 0; g < this.globals.length; g++) { if (!tables.includes(this.globals[g])) { await rethink.db(this.name).tableCreate(this.globals[g]).run(this.connection) } }
         for (let p = 0; p < this.privates.length; p++) { if (!tables.includes(`${this.config.variation}_${this.privates[p]}`)) { await rethink.db(this.name).tableCreate(`${this.config.variation}_${this.privates[p]}`).run(this.connection) } }
 
-        console.ready(`connected to rethink://${this.config.host}:${this.config.port}`);
-        this.connection.addListener('close', function() {
-            console.error('lost connection to the database...');
+        this.context.system.ok(`connected to rethink://${this.config.host}:${this.config.port}`);
+        this.connection.addListener('close', () => {
+            this.context.system.error('lost connection to the database...');
             process.emit('SIGINT');
         });
     }

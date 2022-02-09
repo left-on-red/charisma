@@ -18,6 +18,8 @@ class CommandContext extends BotContext {
         super(client);
         Object.assign(this, context);
 
+        this.log = this.logging.getReference(`guild.${message.guild.id}`);
+
         this.guild = message.guild;
         this.channel = message.channel;
         this.user = message.author;

@@ -198,23 +198,26 @@ let load = {
 async function start() {
     console.log('start');
     client.on('ready', async function() {
+        context.logging.debug('system', 'READY SYSTEM LOGS');
+        //context.logging.debug('system', { a: { b: [1, 0, 2], c: 100 } });
+        //context.system.error(new Error('testing 123!'));
         // disconnects from any voice channels (if she's in any)
         //for (let c = 0; c < client.voice.connections.array().length; c++) { client.voice.connections.array()[c].disconnect() }
 
-        console.info(await load.commands());
-        console.info(await load.daemons());
+        context.system.info(await load.commands());
+        context.system.info(await load.daemons());
         
-        console.info(await load.parameters());
-        console.info(await load.permissions());
+        context.system.info(await load.parameters());
+        context.system.info(await load.permissions());
 
-        console.info(await load.slashes());
+        context.system.info(await load.slashes());
 
         await load.sets();
         await load.gets();
 
         await load.finish();
 
-        console.ready(`logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+        context.system.ok(`logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
     });
 
     process.on('message', async function(msg) {
@@ -227,8 +230,8 @@ async function start() {
     });
 }
 
-client.on('error', function(error) { console.error(error) });
-client.on('disconnect', function() { console.error(disconnected) });
+client.on('error', function(error) { context.system.error(error) });
+client.on('disconnect', function(error) { context.system.error(error) });
 
 start();
 
