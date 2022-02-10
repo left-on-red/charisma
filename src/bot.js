@@ -1,4 +1,3 @@
-let fs = require('fs');
 let Discord = require('discord.js');
 
 let config = require('./../config.json');
@@ -7,12 +6,6 @@ let sharding = config.sharding;
 let token = config.token;
 
 let child_process = require('child_process');
-
-//mongod.exe --dbpath ./data --port 531
-//rethinkdb.exe --bind all --driver-port 531
-let dbproc = child_process.spawn('./rethink/rethinkdb.exe', [ '--directory', `${__dirname}/../rethink/data`, '--driver-port', '531']);
-dbproc.stderr.pipe(process.stderr);
-dbproc.on('exit', function() { console.log('database exited...') });
 
 if (sharding) {
     let manager = new Discord.ShardingManager('./src/shard.js', {
