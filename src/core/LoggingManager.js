@@ -1,6 +1,7 @@
-let colors = require('./../colors.js');
 let LoggingStream = require('./LoggingStream.js');
 let util = require('util');
+
+let colors = require('ansi-colors');
 
 function trace() {
     let error = new Error();
@@ -10,13 +11,8 @@ function trace() {
     return location;
 }
 
-let info_color = colors.fg.getRGB(1, 1, 5);
-let ok_color = colors.fg.getRGB(1, 5, 1);
-let warn_color = colors.fg.getRGB(5, 5, 1);
-let error_color = colors.bg.getRGB(5, 0, 0) + colors.fg.getRGB(0, 0, 0);
-let debug_color = colors.fg.getRGB(5, 3, 2);
-
 let construct_string = (token, string, prepend = '') => {
+    if (typeof string != 'string') { string = string.toString() }
     let raw = token.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
     let padding = ''.padEnd(raw.length, ' ');
     let lines = string.split('\n');
@@ -29,17 +25,17 @@ let construct_string = (token, string, prepend = '') => {
 }
 
 class LoggingManager {
-    constructor() {
+    constructor(output) {
         /**
          * @type {Map<string, LoggingStream>}
          */
         this.streams = new Map();
+        this.output = output;
         this.addStream('system');
     }
 
     addStream(channel) {
         if (!this.active) { this.active = channel }
-
         let stream = new LoggingStream(channel);
         this.streams.set(channel, stream);
     }
@@ -48,32 +44,35 @@ class LoggingManager {
     log(channel, string) {
         if (!this.streams.has(channel)) { this.streams.addStream(channel) }
         this.streams.get(channel).write(`${string}\n`);
-        if (this.active == channel) { process.stdout.write(`${string}\n`) }
+        if (this.active == channel) {
+            if (this.output) { this.output.write(`${string}\n`) }
+            else { process.stdout.write(`${string}\n`) }
+        }
     }
 
     info(channel, out) {
-        let token = `${info_color}[#${channel}/INFO]${colors.reset}`;
+        let token = colors.cyan(`[#${channel}/INFO]`);
         this.log(channel, construct_string(token, out));
     }
 
     ok(channel, out) {
-        let token = `${ok_color}[#${channel}/OK]${colors.reset}`;
+        let token = colors.green(`[#${channel}/OK]`);
         this.log(channel, construct_string(token, out));
     }
 
     warn(channel, out) {
-        let token = `${warn_color}[#${channel}/WARN]${colors.reset}`;
+        let token = colors.yellow(`[#${channel}/WARN]`);
         this.log(channel, construct_string(token, out));
     }
 
     error(channel, out) {
-        let token = `${error_color}[#${channel}/ERR]${colors.reset}`;
+        let token = colors.bgRed.black(`[#${channel}/ERR]`);
         if (out instanceof Error) { out = out.stack }
-        this.log(channel, construct_string(token, out, colors.fg.getRGB(5, 1, 1)));
+        this.log(channel, construct_string(token, out));
     }
 
     debug(channel, out) {
-        let token = `${debug_color}[#${channel}/DEBUG:${trace()}]${colors.reset}`;
+        let token = colors.blue(`[#${channel}/DEBUG:${trace()}]`);
         if (typeof out == 'string') {
             this.log(channel, construct_string(token, out));
         }
