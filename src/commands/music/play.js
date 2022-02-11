@@ -24,39 +24,49 @@ module.exports = class extends Command {
                 let arr = [];
                 for (let v = 0; v < videos.length; v++) { arr.push(`**[${v+1}] - ${videos[v].title} - ${moment.utc(videos[v].duration.seconds*1000).format('HH:mm:ss')}**`) }
                 menuEmbed.setDescription(arr.join('\n'));
-                menuEmbed.setFooter('pick one by entering 1-10');
+                menuEmbed.setFooter('pick one by entering 1-10; expires in 20 seconds');
                 menuEmbed.setAuthor(`results for "${parameters[0]}"`);
                 let menuMessage = await context.channel.send({ embeds: [menuEmbed] });
     
                 try {
                     let collector = context.channel.createMessageCollector({ filter: (m) => m.content > 0 && m.content < videos.length+1 && m.author.id == context.user.id, time: 20000, max: 1 })
-                    collector.on('collect', (m) => {
-                        let successEmbed = new context.Discord.MessageEmbed();
-                        successEmbed.setColor(context.config.bot.accent);
+                    collector.on('end', (collected) => {
+                        if (collected.size > 0) {
+                            let message = collected.first();
+                            let successEmbed = new context.Discord.MessageEmbed();
+                            successEmbed.setColor(context.config.bot.accent);
+    
+                            let data = videos[parseInt(message.content) - 1];
+    
+                            context.music.add(context.guild.id, {
+                                author: data.author.name,
+                                duration: data.duration,
+                                thumbnail: data.thumbnail,
+                                title: data.title,
+                                url: data.url
+                            });
+    
+                            if (context.music.instances.get(context.guild.id).queue.length >= 1) { successEmbed.setDescription(`added **"${data.title}"** to the queue`) }
+                            else { successEmbed.setDescription(`started playing **"${data.title}"**`) }
+                            
+                            successEmbed.setThumbnail(data.thumbnail);
+                            menuMessage.edit({ embeds: [successEmbed] });
+                        }
 
-                        let data = videos[parseInt(m.content) - 1];
-
-                        context.music.add(context.guild.id, {
-                            author: data.author.name,
-                            duration: data.duration,
-                            thumbnail: data.thumbnail,
-                            title: data.title,
-                            url: data.url
-                        });
-
-                        if (context.music.instances.get(context.guild.id).queue.length >= 1) { successEmbed.setDescription(`added **"${data.title}"** to the queue`) }
-                        else { successEmbed.setDescription(`started playing **"${data.title}"**`) }
-                        
-                        successEmbed.setThumbnail(data.thumbnail);
-                        menuMessage.edit({ embeds: [successEmbed] });
+                        else {
+                            let errorEmbed = new context.Discord.MessageEmbed();
+                            errorEmbed.setColor(context.config.bot.accent);
+                            errorEmbed.setDescription(`the song selection has expired...`);
+                            menuMessage.edit({ embeds: [errorEmbed] });
+                        }
                     });
                 }
     
                 catch(error) {
-                    console.error(error);
+                    context.log.error(error);
                     let errorEmbed = new context.Discord.MessageEmbed();
                     errorEmbed.setColor(context.config.bot.accent);
-                    errorEmbed.setDescription(`no song was selected; canceling selection`);
+                    errorEmbed.setDescription(`an error occurred...`);
                     menuMessage.edit({ embed: [errorEmbed] });
                 }
             }
