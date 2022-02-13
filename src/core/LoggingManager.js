@@ -5,7 +5,6 @@ let colors = require('ansi-colors');
 
 function trace() {
     let error = new Error();
-    //console.info(error.stack.split('\n')[3]);
     let location = error.stack.split('\n')[3].split('\\')[error.stack.split('\n')[3].split('\\').length - 1];
     if (location.endsWith(')')) { location = location.slice(0, -1) }
     return location;
@@ -73,11 +72,7 @@ class LoggingManager {
 
     debug(channel, out) {
         let token = colors.blue(`[#${channel}/DEBUG:${trace()}]`);
-        if (typeof out == 'string') {
-            this.log(channel, construct_string(token, out));
-        }
-
-        else if (typeof out == 'object') {
+        if (typeof out == 'object') {
             let obj = util.inspect(out, {
                 depth: Infinity,
                 colors: true,
@@ -88,6 +83,8 @@ class LoggingManager {
             for (let a = 0; a < arr.length; a++) { arr[a] = arr[a].padStart(arr[a].length - 2 + (arr[a].search(/\S/) + 2), ' ') }
             this.log(channel, construct_string(token, arr.join('\n')));
         }
+
+        else { this.log(channel, construct_string(token, out)) }
     }
 
     /**
