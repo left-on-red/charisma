@@ -152,14 +152,11 @@ async function start() {
     });
 
     process.on('message', async function(msg) {
-        if (msg == 'KILL') {
+        if (msg.startsWith('KILL')) {
+            let reason = msg.length == 4 ? null : msg.slice(5);
             context.music.instances.forEach(i => i.connection.destroy());
-            process.send('KILL');
-        }
-
-        else if (msg == 'DEAD_DB') {
-            context.music.instances.forEach(i => i.connection.destroy());
-            context.system.error('FATAL: rethink db exited...');
+            if (reason) { context.system.error(`FATAL: ${reason}`) }
+            else { context.system.info(`process terminated...`) }
             process.send('KILL');
         }
 

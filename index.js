@@ -8,41 +8,71 @@ let screen = blessed.screen({
     dockBorders: true
 });
 
-let log = blessed.log({
+let toolbar = blessed.box({
     top: 0,
     left: 0,
     width: '100%',
-    height: '99%',
+    height: 1
+});
+
+let speed_tool = blessed.box({
+    height: 1
+});
+
+toolbar.append(speed_tool);
+
+let log = blessed.box({
+    top: 1,
+    left: 0,
+    width: '100%',
+    height: '100%-2',
+    scrollable: true,
+    mouse: true,
+
     border: {
-        type: 'line'
+        type: 'line',
+        fg: 'lightgray'
     },
+    
     scrollbar: {
-        bg: 'white'
+        ch: ' ',
+        style: {
+            bg: 'white'
+        }
     }
 });
 
-let input = blessed.textarea({
-    left: 0,
+let caret = blessed.box({
+    left: 1,
     bottom: 0,
-    width: '100%',
-    height: 3,
-    border: {
-        type: 'line'
-    },
-
-    content: '> '
+    width: 1,
+    height: 1,
+    fg: 'green'
 });
 
-let str = '';
+let input = blessed.textbox({
+    left: 3,
+    bottom: 0,
+    width: '100%-3',
+    height: 1
+});
+
+caret.content = '>';
+
 let scroll_mode = 'auto';
+let scroll_speed = 1;
 
 setInterval(() => {
-    if (scroll_mode == 'auto') { log.scroll(1) }
+    if (scroll_mode == 'auto') { log.scroll(100) }
+    speed_tool.content = `scroll: ${scroll_mode}`;
     screen.render();
 }, 10);
 
+screen.append(toolbar);
 screen.append(log);
+screen.append(caret);
 screen.append(input);
+
 input.focus();
 
 let child = child_process.fork('src/bot.js', { silent: true });
@@ -55,21 +85,25 @@ child.stdout.on('data', (chunk) => { log.content = log.content + chunk });
 child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
 
 child.on('message', function(msg) { if (msg == 'KILL') { process.exit() } });
-dbproc.on('exit', function() { child.send('DEAD_DB') });
+dbproc.on('exit', function() { child.send('KILL rethink database process terminated unexpectedly...') });
 
-screen.key('C-c', () => { child.send('KILL') });
+let read = (error, value) => {
+    child.send(`COMMAND ${value}`);
+    input.value = '';
+    input.readInput((e, v) => { read(e, v) });
+}
 
-input.key([...'abcdefghijklmnopqrstuvwxyz0123456789'.split(''), 'enter', 'space', 'backspace'], function(ch, key) {
-    let char = key.name;
-    if (char == 'space') { char = ' ' }
-    if (char == 'backspace') { str = str.slice(0, str.length - 1) }
-    else if (char == 'enter') {
-        child.send(`COMMAND ${str}`);
-        str = '';
-    }
-    else { str += char }
-    input.setContent(`> ${str}`);
-    screen.render();
+input.readInput((error, value) => { read(error, value) });
+input.key('C-c', () => { child.send('KILL') });
+input.key('C-up', () => {
+    scroll_mode = 'manual';
+    log.scroll(0 - scroll_speed);
+});
+
+input.key('C-down', () => {
+    scroll_mode = 'manual';
+    log.scroll(0 + scroll_speed);
+    if (log.getScrollHeight() - log.getScroll() == 1) { scroll_mode = 'auto' }
 });
 
 screen.render();
