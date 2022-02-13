@@ -15,6 +15,8 @@ class AssetManager {
         let command = require(path);
         if (command.prototype instanceof Command) {
             let instance = new command();
+
+            this.context.commands.aliases.forEach((v, k, map) => { if (v == instance.name) { map.delete(k) } });
             for (let a = 0; a < instance.aliases.length; a++) { this.context.commands.aliases.set(instance.aliases[a], instance.name) }
 
             let params = [];
