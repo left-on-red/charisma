@@ -31,5 +31,8 @@
     "yt-search": "^2.4.1",
     "ytdl-core": "^4.10.1",
     "ytpl": "^2.0.5"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3"
   }
 }

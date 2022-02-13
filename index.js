@@ -1,7 +1,18 @@
-let blessed = require('blessed');
 let child_process = require('child_process');
 let fs = require('fs');
+let blessed = require('blessed');
+let chokidar = require('chokidar');
+
 process.stdin.setRawMode(true);
+
+let recur = (path, callback) => {
+    if (fs.statSync(path).isDirectory()) {
+        let dir = fs.readdirSync(path);
+        for (let d = 0; d < dir.length; d++) { recur(`${path}\\${dir[d]}`, callback) }
+    }
+
+    else { callback(path) }
+}
 
 let screen = blessed.screen({
     smartCSR: true,
@@ -16,10 +27,19 @@ let toolbar = blessed.box({
 });
 
 let speed_tool = blessed.box({
-    height: 1
+    height: 1,
+    width: '20%'
+});
+
+let hotswaps = blessed.box({
+    height: 1,
+    right: 0,
+    width: '50%',
+    tags: true
 });
 
 toolbar.append(speed_tool);
+toolbar.append(hotswaps);
 
 let log = blessed.box({
     top: 1,
@@ -84,7 +104,22 @@ let dbproc = child_process.spawn('./rethink/rethinkdb.exe', [ '--directory', `${
 child.stdout.on('data', (chunk) => { log.content = log.content + chunk });
 child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
 
-child.on('message', function(msg) { if (msg == 'KILL') { process.exit() } });
+child.on('message', function(msg) {
+    if (msg == 'KILL') { process.exit() }
+    else if (msg == 'READY') {
+        let files = [];
+        recur(`${__dirname}\\src\\commands`, (path) => { files.push(path) });
+            chokidar.watch(files).on('change', (path) => {
+            child.send(`HOTSWAP_COMMAND ${path}`);
+        });
+    }
+
+    else if (msg.startsWith('HOTSWAP_NOTIF')) {
+        let path = msg.slice(14);
+        hotswaps.content = `{right}hotswapped ${path}{/right}`;
+        setTimeout(() => { hotswaps.content = '' }, 2000);
+    }
+});
 dbproc.on('exit', function() { child.send('KILL rethink database process terminated unexpectedly...') });
 
 let read = (error, value) => {

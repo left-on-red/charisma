@@ -149,6 +149,8 @@ async function start() {
         await load.finish();
 
         context.system.ok(`logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+
+        process.send('READY');
     });
 
     process.on('message', async function(msg) {
@@ -161,7 +163,15 @@ async function start() {
         }
 
         else if (msg.startsWith('COMMAND')) {
-            context.system.info(`received: ${msg}`);
+            let command = msg.slice(8);
+            context.system.info(`received: ${command}`);
+        }
+
+        else if (msg.startsWith('HOTSWAP_COMMAND')) {
+            let path = msg.slice(16);
+            let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
+            manager.registerCommand(path);
+            process.send(`HOTSWAP_NOTIF ${notif_path}`);
         }
     });
 }
