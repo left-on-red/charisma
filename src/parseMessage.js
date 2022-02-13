@@ -202,7 +202,7 @@ module.exports = async function(imports, message) {
                             else { context.commands.functions.get(cmd.name)[check](context, cmd.arguments) }
                         }
 
-                        catch(error) { console.error(error) }
+                        catch(error) { context.log.error(error) }
 
                         if (cmd.object.cooldown) {
                             if (!context.local.user.cooldowns[cmd.name]) { context.local.user.cooldowns[cmd.name] = -1 }
