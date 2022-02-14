@@ -2,6 +2,7 @@ let request = require('request');
 let extensions = [ 'png', 'jpg', 'jpeg', 'gif' ];
 
 let CommandContext = require('./../CommandContext.js');
+let CoreModule = require('./../CoreModule.js');
 
 async function getBuffer(url) {
     return new Promise(function(resolve, reject) {
@@ -12,8 +13,12 @@ async function getBuffer(url) {
     });
 }
 
-class ImageModule {
-    static gmToBuffer(data) {
+class ImageModule extends CoreModule {
+    constructor() {
+        super('image');
+    }
+
+    gmToBuffer(data) {
         return new Promise(function(resolve, reject) {
             data.stream(function(err, stdout, stderr) {
                 if (err) { return reject(err) }
@@ -30,7 +35,7 @@ class ImageModule {
      * @param {CommandContext} context 
      * @returns 
      */
-    static async getLastImage(context) {
+    async getLastImage(context) {
         let messages = await context.channel.messages.fetch({ limit: 20 });
 
         messages.sort((msg1, msg2) => msg1.createdTimestamp - msg2.createdTimestamp);

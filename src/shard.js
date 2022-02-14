@@ -98,13 +98,13 @@ let load = {
 
     commands: async function() {
         let count = 0;
-        await recur(`${__dirname}/commands`, (path) => { count += manager.registerCommand(path) }, js_file);
+        recur(`${__dirname}/commands`, (path) => { count += manager.registerCommand(path) }, js_file);
         return `loaded ${count} commands`;
     },
 
     slashes: async function() {
         let count = 0;
-        await recur(`${__dirname}/slashes`, (path) => { count += manager.registerSlash(path) }, js_file);
+        recur(`${__dirname}/slashes`, (path) => { count += manager.registerSlash(path) }, js_file);
         return `loaded ${count} slashes`;
     },
 
@@ -178,6 +178,23 @@ async function start() {
             let path = msg.slice(15);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerSlash(path);
+            process.send(`HOTSWAP_NOTIF ${notif_path}`);
+        }
+
+        else if (msg.startsWith('HOTSWAP_MODULE')) {
+            // hotswapping entire modules doesn't seem like a very good idea,
+            // but I wasn't really sure how else to go about it.
+            // hopefully this is sound logic
+
+            let path = msg.slice(17);
+            let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
+            
+            delete require.cache[require.resolve(path)];
+            let core_module = new (require(path))(context);
+            let name = core_module.module_name;
+            if (context[name].module_unload) { context[name].module_unload() }
+            context[name] = core_module;
+
             process.send(`HOTSWAP_NOTIF ${notif_path}`);
         }
     });

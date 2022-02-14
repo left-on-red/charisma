@@ -1,6 +1,7 @@
 let rethink = require('rethinkdb');
 let BotContext = require('./../BotContext.js');
 let Configs = require('./../Configs.js');
+let CoreModule = require('./../CoreModule.js');
 
 let defaults = {
     guild: Configs.GuildConfig,
@@ -11,12 +12,14 @@ let defaults = {
     experience: Configs.ExperienceConfig,
 }
 
-class DataModule {
+class DataModule extends CoreModule {
     /**
      * 
      * @param {BotContext} context 
      */
     constructor(context) {
+        super('data');
+
         this.context = context;
 
         this.name = 'charisma';
@@ -28,7 +31,6 @@ class DataModule {
 
         // tables that exist globally for all bot instances
         this.globals = [ 'inventory', 'karma', 'experience' ];
-
 
         /*
         delete imports.config.defaults.guild.prefix;

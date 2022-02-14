@@ -3,13 +3,15 @@ let voice = require('@discordjs/voice');
 
 let BotContext = require('./../BotContext.js');
 let CommandContext = require('./../CommandContext.js');
+let CoreModule = require('./../CoreModule.js');
 
-class MusicModule {
+class MusicModule extends CoreModule {
     /**
      * 
      * @param {BotContext} context 
      */
     constructor(context) {
+        super('music');
         this.context = context;
 
         /**
@@ -21,7 +23,11 @@ class MusicModule {
             `I'm not in a voice channel`,
             `I'm not in that voice channel`,
             `I don't have permission to speak in this channel`
-        ]
+        ];
+
+        this.onUnload(() => {
+            this.instances.forEach((value) => { value.connection.destroy() });
+        });
     }
 
     setup(id) {

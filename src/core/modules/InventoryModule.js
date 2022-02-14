@@ -1,5 +1,6 @@
 let CommandContext = require('./../CommandContext.js');
 let BotContext = require('./../BotContext.js');
+let CoreModule = require('./../CoreModule.js');
 
 function clone(obj) {
     var copy;
@@ -17,7 +18,7 @@ function clone(obj) {
     }
 }
 
-class InventoryModule {
+class InventoryInstance {
     /**
      * 
      * @param {string} id 
@@ -25,9 +26,10 @@ class InventoryModule {
      */
     constructor(id, context) {
         this.id = id;
+        this.context = context;
+
         this.data = {};
         this.before = {};
-        this.context = context;
     }
 
     init = async () => {
@@ -206,6 +208,19 @@ class InventoryModule {
     }
 
     static getMoney = async (context, id) => (await context.data._get('inventory', id)).balance;
+}
+
+class InventoryModule extends CoreModule {
+    constructor(context) {
+        super('inventory');
+        this.context = context;
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     */
+    get(id) { return new InventoryInstance(id, this.context) }
 }
 
 module.exports = InventoryModule;

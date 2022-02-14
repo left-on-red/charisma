@@ -1,4 +1,5 @@
 let fs = require('fs');
+let CoreModule = require('./../CoreModule.js');
 let flavors = {};
 let accentbank = require('./../../flavors/accentbank.json');
 
@@ -13,9 +14,9 @@ function recur(path, obj) {
 
 recur(`/`, flavors);
 
-class FlavorsModule {
+class FlavorsModule extends CoreModule {
     constructor() {
-
+        super('flavors');
     }
 
     get = (flavor) => flavors[flavor];

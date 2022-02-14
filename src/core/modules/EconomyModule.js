@@ -1,33 +1,32 @@
 let fs = require('fs');
 let emoji = require('discord-emoji-converter');
+let CoreModule = require('./../CoreModule.js');
 
-let items = {};
-let tables = {};
-
-function recur(path) {
-    let files = fs.readdirSync(`${__dirname}/../../economy/${path}`);
-    for (let f = 0; f < files.length; f++) {
-        let isFolder = fs.statSync(`${__dirname}/../../economy/${path}/${files[f]}`).isDirectory();
-        if (isFolder) { recur(`${path}/${files[f]}`) }
-        else {
-            let item = require(`./../../economy/${path}/${files[f]}`);
-            items[files[f].split('.json')[0]] = item;
-        }
+let recur = (path, callback) => {
+    if (fs.statSync(path).isDirectory()) {
+        let dir = fs.readdirSync(path);
+        for (let d = 0; d < dir.length; d++) { recur(`${path}/${dir[d]}`, callback) }
     }
+
+    else { callback(path) }
 }
 
-recur(`items`);
-
-let tableFiles = fs.readdirSync(`${__dirname}/../../economy/tables/`);
-for (let f = 0; f < tableFiles.length; f++) {
-    let table = require(`./../../economy/tables/${tableFiles[f]}`);
-    tables[tableFiles[f].split('.js')[0]] = table;
-}
-
-class EconomyModule {
+class EconomyModule extends CoreModule {
     constructor() {
-        this.items = items;
-        this.tables = tables;
+        super('economy');
+
+        this.items = {};
+        this.tables = {};
+
+        recur('./src/economy/items', (path) => {
+            let name = path.split('/')[path.split('/').length - 1].split('.json')[0];
+            this.items[name] = JSON.parse(fs.readFileSync(path));
+        });
+
+        recur('./src/economy/tables', (path) => {
+            let name = path.split('/')[path.split('/').length - 1].split('.json')[0];
+            this.tables[name] = JSON.parse(fs.readFileSync(path));
+        });
     }
 
     itemFromEmoji(emote) {

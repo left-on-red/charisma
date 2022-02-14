@@ -1,13 +1,17 @@
 let Discord = require('discord.js');
 let BotContext = require('./../BotContext.js');
 let CommandContext = require('./../CommandContext.js');
+let CoreModule = require('./../CoreModule.js');
 
-class ReactionModule {
+class ReactionModule extends CoreModule {
     /**
      * 
      * @param {BotContext} context 
      */
-    constructor(context) { this.context = context }
+    constructor(context) {
+        super('reactions');
+        this.context = context;
+    }
 
     /**
      * 

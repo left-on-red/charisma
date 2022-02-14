@@ -1,9 +1,15 @@
 let Discord = require('discord.js');
 let CommandContext = require('./../CommandContext.js');
+let CoreModule = require('./../CoreModule.js');
 
-class AcceptModule {
+class AcceptModule extends CoreModule {
     constructor() {
+        super('accept');
         this.cache = new Map();
+
+        this.onUnload(() => {
+            this.cache = new Map();
+        });
     }
 
     /**
@@ -42,6 +48,7 @@ class AcceptModule {
                 let count = 0;
                 let interval = setInterval(() => {
                     count += 1;
+                    if (!this.cache.get(guild) || !this.cache.get(guild).get(channel)) { count = 300 }
                     if (this.cache.get(guild).get(channel).get(user) == true) {
                         this.cache.get(guild).get(channel).delete(user);
                         if (this.cache.get(guild).get(channel).size == 0) { this.cache.get(guild).delete(channel) }

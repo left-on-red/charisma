@@ -1,15 +1,17 @@
 Math.seedrandom = require('seedrandom');
 let BotContext = require('./../BotContext.js');
+let CoreModule = require('./../CoreModule.js');
 
 let min = 5;
 let max = 25;
 
-class ShopModule {
+class ShopModule extends CoreModule {
     /**
      * 
      * @param {BotContext} context 
      */
     constructor(context) {
+        super('shop');
         this.context = context;
     }
 

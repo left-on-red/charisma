@@ -1,5 +1,6 @@
 var https = require('https');
 var base = 'https://api.tenor.com/v1';
+let CoreModule = require('./../CoreModule.js');
 
 async function get(url) {
     return new Promise(function(resolve, reject) {
@@ -12,12 +13,13 @@ async function get(url) {
     });
 }
 
-class TenorModule {
+class TenorModule extends CoreModule {
     /**
      * 
      * @param {*} context 
      */
     constructor(context) {
+        super('tenor');
         this.context = context;
     }
 

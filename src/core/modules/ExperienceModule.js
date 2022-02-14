@@ -1,5 +1,6 @@
 let Discord = require('discord.js');
 let CommandContext = require('./../CommandContext.js');
+let CoreModule = require('./../CoreModule.js');
 
 let colors = {
     local: '#6190ff',
@@ -11,7 +12,11 @@ let emoji = {
     global: '940457335523008522'
 }
 
-class ExperienceModule {
+class ExperienceModule extends CoreModule {
+    constructor() {
+        super('experience');
+    }
+
     _get(level, factor) { return Math.floor((800 * Math.pow(level + 1, factor)) / 5) + 200 };
     
     expToLevel(exp, factor) {

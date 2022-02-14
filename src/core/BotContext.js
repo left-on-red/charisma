@@ -59,14 +59,14 @@ class BotContext {
         this.command = new (require('./modules/CommandModule.js'))(this);
 
         this.data = new (require('./modules/DataModule.js'))(this);
-        this.accept = new (require('./modules/AcceptModule.js'))();
-        this.experience = new (require('./modules/ExperienceModule.js'))();
+        this.accept = new (require('./modules/AcceptModule.js'))(this);
+        this.experience = new (require('./modules/ExperienceModule.js'))(this);
         this.music = new (require('./modules/MusicModule.js'))(this);
         this.reactions = new (require('./modules/ReactionsModule.js'))(this);
-        this.flavors = new (require('./modules/FlavorsModule.js'))();
-        this.economy = new (require('./modules/EconomyModule.js'))();
-        this.inventory = require('./modules/InventoryModule.js');
-        this.image = require('./modules/ImageModule.js');
+        this.flavors = new (require('./modules/FlavorsModule.js'))(this);
+        this.economy = new (require('./modules/EconomyModule.js'))(this);
+        this.inventory = new (require('./modules/InventoryModule.js'))(this);
+        this.image = new (require('./modules/ImageModule.js'))(this);
         this.shop = new (require('./modules/ShopModule.js'))(this);
         this.tenor = new (require('./modules/TenorModule.js'))(this);
 
