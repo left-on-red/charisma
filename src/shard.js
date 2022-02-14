@@ -171,14 +171,14 @@ async function start() {
             let path = msg.slice(16);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerCommand(path);
-            process.send(`HOTSWAP_NOTIF ${notif_path}`);
+            process.send(`NOTIFY hotswapped ${notif_path}`);
         }
 
         else if (msg.startsWith('HOTSWAP_SLASH')) {
             let path = msg.slice(15);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerSlash(path);
-            process.send(`HOTSWAP_NOTIF ${notif_path}`);
+            process.send(`NOTIFY hotswapped ${notif_path}`);
         }
 
         else if (msg.startsWith('HOTSWAP_MODULE')) {
@@ -195,7 +195,7 @@ async function start() {
             if (context[name].module_unload) { context[name].module_unload() }
             context[name] = core_module;
 
-            process.send(`HOTSWAP_NOTIF ${notif_path}`);
+            process.send(`NOTIFY hotswapped ${notif_path}`);
         }
     });
 }

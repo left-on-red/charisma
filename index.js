@@ -121,9 +121,9 @@ child.on('message', function(msg) {
         chokidar.watch(modules).on('change', (path) => { child.send(`HOTSWAP_MODULE ${path}`) });
     }
 
-    else if (msg.startsWith('HOTSWAP_NOTIF')) {
-        let path = msg.slice(14);
-        hotswaps.content = `{right}hotswapped ${path}{/right}`;
+    else if (msg.startsWith('NOTIFY')) {
+        let path = msg.slice(7);
+        hotswaps.content = `{right}${path}{/right}`;
         setTimeout(() => { hotswaps.content = '' }, 2000);
     }
 });
