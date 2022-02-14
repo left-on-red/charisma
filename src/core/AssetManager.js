@@ -14,6 +14,8 @@ class AssetManager {
     registerCommand(path) {
         // require() naturally caches modules; not great for hotswapping
         delete require.cache[require.resolve(path)];
+
+        let success = false;
         
         try {
             let command = require(path);
@@ -45,32 +47,32 @@ class AssetManager {
                 this.context.commands.parameters.set(instance.name, params);
                 this.context.commands.functions.set(instance.name, commands);
     
-                return true;
+                success = true;
             }
         }
         
-        catch(error) {
-            this.context.system.error(error);
-            return false;
-        }
+        catch(error) { this.context.system.error(error) }
+
+        return success;
     }
 
     registerSlash(path) {
         delete require.cache[require.resolve(path)];
+
+        let success = false;
         
         try {
             let slash = require(path);
             if (slash.prototype instanceof Slash) {
                 let instance = new slash();
                 this.context.slashes.set(instance.name, instance);
-                return true;
+                success = true;
             }
         }
 
-        catch(error) {
-            this.context.system.error(error);
-            return false;
-        }
+        catch(error) { this.context.system.error(error) }
+
+        return success;
     }
 
     registerParameter(path) {
