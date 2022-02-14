@@ -107,11 +107,14 @@ child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
 child.on('message', function(msg) {
     if (msg == 'KILL') { process.exit() }
     else if (msg == 'READY') {
-        let files = [];
-        recur(`${__dirname}\\src\\commands`, (path) => { files.push(path) });
-            chokidar.watch(files).on('change', (path) => {
-            child.send(`HOTSWAP_COMMAND ${path}`);
-        });
+        
+        let commands = [];
+        recur(`${__dirname}\\src\\commands`, (path) => { commands.push(path) });
+        chokidar.watch(commands).on('change', (path) => { child.send(`HOTSWAP_COMMAND ${path}`) });
+
+        let slashes = [];
+        recur(`${__dirname}\\src\\slashes`, (path) => { slashes.push(path) });
+        chokidar.watch(slashes).on('change', (path) => { child.send(`HOTSWAP_SLASH ${path}`) });
     }
 
     else if (msg.startsWith('HOTSWAP_NOTIF')) {

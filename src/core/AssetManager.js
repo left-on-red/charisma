@@ -56,14 +56,21 @@ class AssetManager {
     }
 
     registerSlash(path) {
-        let slash = require(path);
-        if (slash.prototype instanceof Slash) {
-            let instance = new slash();
-            this.context.slashes.set(instance.name, instance);
-            return true;
+        delete require.cache[require.resolve(path)];
+        
+        try {
+            let slash = require(path);
+            if (slash.prototype instanceof Slash) {
+                let instance = new slash();
+                this.context.slashes.set(instance.name, instance);
+                return true;
+            }
         }
 
-        return false;
+        catch(error) {
+            this.context.system.error(error);
+            return false;
+        }
     }
 
     registerParameter(path) {
