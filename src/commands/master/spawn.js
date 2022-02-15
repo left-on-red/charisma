@@ -88,18 +88,14 @@ module.exports = class extends Command {
                 let member = context.member;
                 if (parameters[2]) { member = await context.guild.members.fetch(parameters[2]) }
 
-                try {
-                    let inventory = new context.inventory(member.id, context);
-                    await inventory.init();
-                    inventory.keys.add(parameters[1]);
+                let inventory = context.inventory.get(member.id);
+                await inventory.init();
+                inventory.keys.add(parameters[1]);
 
-                    if (member.id == context.user.id) { embed.setDescription(`you gave yourself ${context.economy.items[parameters[1]].emoji}`) }
-                    else { embed.setDescription(`**${member.user.tag}** was given ${context.economy.items[parameters[1]].emoji}`) }
+                if (member.id == context.user.id) { embed.setDescription(`you gave yourself ${context.economy.items[parameters[1]].emoji}`) }
+                else { embed.setDescription(`**${member.user.tag}** was given ${context.economy.items[parameters[1]].emoji}`) }
 
-                    await inventory.append();
-                }
-
-                catch(e) { console.error(e); embed.setDescription(`an error occured!`) }
+                await inventory.append();
             }
 
             else { embed.setDescription(`${context.economy.items[parameters[1]].emoji} is not a key item`) }
