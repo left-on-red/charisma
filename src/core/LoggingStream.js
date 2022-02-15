@@ -6,7 +6,11 @@ class LoggingStream extends Writable {
     constructor(name) {
         super();
         this.name = name;
+        this.subscribed = false;
     }
+
+    subscribe() { this.subscribed = true }
+    unsubscribe() { this.subscribed = false }
 
     _write(chunk, encoding, next) {
         if (!fs.existsSync(`./logs/#${this.name}`)) { fs.mkdirSync(`./logs/#${this.name}`) }

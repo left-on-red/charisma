@@ -30,20 +30,27 @@ class LoggingManager {
          */
         this.streams = new Map();
         this.output = output;
-        this.addStream('system');
+        this.addStream('system').subscribe();
     }
 
+    /**
+     * 
+     * @param {string} channel 
+     * @returns {LoggingStream}
+     */
     addStream(channel) {
-        if (!this.active) { this.active = channel }
         let stream = new LoggingStream(channel);
         this.streams.set(channel, stream);
+        return stream;
     }
 
 
     log(channel, string) {
-        if (!this.streams.has(channel)) { this.streams.addStream(channel) }
-        this.streams.get(channel).write(`${string}\n`);
-        if (this.active == channel) {
+        if (!this.streams.has(channel)) { this.addStream(channel) }
+        let stream = this.streams.get(channel);
+        stream.write(`${string}\n`);
+
+        if (stream.subscribed) {
             if (this.output) { this.output.write(`${string}\n`) }
             else { process.stdout.write(`${string}\n`) }
         }
@@ -85,6 +92,16 @@ class LoggingManager {
         }
 
         else { this.log(channel, construct_string(token, out)) }
+    }
+
+    /**
+     * 
+     * @param {string} channel 
+     * @returns {LoggingStream}
+     */
+    getStream(channel) {
+        if (this.streams.has(channel)) { return this.streams.get(channel) }
+        else { return null }
     }
 
     /**
