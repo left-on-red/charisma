@@ -40,7 +40,7 @@ module.exports = class extends Command {
     
                             context.music.add(context.guild.id, {
                                 author: data.author.name,
-                                duration: data.duration,
+                                duration: data.duration.seconds * 1000,
                                 thumbnail: data.thumbnail,
                                 title: data.title,
                                 url: data.url
