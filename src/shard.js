@@ -1,4 +1,5 @@
 let Discord = require('discord.js');
+let ansi = require('ansi-colors');
 let fs = require('fs');
 
 let AssetManager = require('./core/AssetManager.js');
@@ -154,6 +155,9 @@ async function start() {
     });
 
     process.on('message', async function(msg) {
+        let notify_hotswap = (str) => process.send(`NOTIFY {white-bg}{black-fg}hotswapped ${str}{/black-fg}{/white-bg}`);
+        let notify_command = (str) => process.send(`NOTIFY {red-fg}${str}{/red-fg}`);
+
         if (msg.startsWith('KILL')) {
             let reason = msg.length == 4 ? null : msg.slice(5);
             context.music.instances.forEach(i => i.connection.destroy());
@@ -163,22 +167,86 @@ async function start() {
         }
 
         else if (msg.startsWith('COMMAND')) {
-            let command = msg.slice(8);
-            context.system.info(`received: ${command}`);
+            let cmd = msg.slice(8);
+            if (cmd != '') {
+                let args = cmd.split(' ');
+                if (args[0] == 'channels') {
+                    let lines = ['available channels:'];
+                    context.logging.streams.forEach(v => lines.push(`${v.subscribed ? ansi.green(`- #${v.name}`) : ansi.red(`- #${v.name}`)}`));
+                    context.system.info(lines.join('\n'));
+                }
+
+                else if (args[0] == 'subscribe') {
+                    if (!args[1]) { return notify_command(`logging channel is required`) }
+                    let stream = context.logging.getStream(args[1]);
+                    if (!stream) { return notify_command(`logging channel "#${args[1]}" does not exist`) }
+                    if (stream.subscribed) { return notify_command(`you are already subscribed to #${args[1]}`) }
+                    stream.subscribe();
+                    return notify_command(`{green-fg}subscribed to #${args[1]}{/green-fg}`);
+                }
+
+                else if (args[0] == 'unsubscribe') {
+                    if (!args[1]) { return notify_command(`logging channel is required`) }
+                    let stream = context.logging.getStream(args[1]);
+                    if (!stream) { return notify_command(`logging channel "#${args[1]}" does exist`) }
+                    if (!stream.subscribed) { return notify_command(`you are already unsubscribed from #${args[1]}`) }
+                    stream.unsubscribe();
+                    return notify_command(`{green-fg}unsubscribed from #${args[1]}{/green-fg}`);
+                }
+
+                else if (args[0] == 'register') {
+                    let types = ['command', 'slash', 'module'];
+
+                    if (!args[1]) { return notify_command(`register type is required (${types.join(', ')})`) }
+                    if (!types.includes(args[1])) { return notify_command(`invalid register type "${args[1]}"; expected (${types.join(', ')})`) }
+                    if (!args[2]) { return notify_command(`expected register path`) }
+                    let path = `${__dirname}\\${args[2].replace(/\//, '\\')}`;
+                    let visual = path.replace(/\\/g, '/').slice(__dirname.length + 5);
+                    
+                    if (!fs.existsSync(path)) { return notify_command(`path does not exist`) }
+                    if (fs.statSync(path).isFile()) { return notify_command(`specified path must be a file`) }
+
+                    if (args[1] == 'command') {
+                        let success = manager.registerCommand(path);
+                        if (success) {
+                            process.send(`LISTEN_COMMAND ${path}`);
+                            return notify_command(`{green-fg}registered command ${visual}{/green-fg}`);
+                        }
+
+                        else { return notify_command(`failed to register command ${visual}`) }
+                    }
+
+                    else if (args[1] == 'slash') {
+                        let success = manager.registerSlash(path);
+                        if (success) {
+                            process.send(`LISTEN_SLASH ${path}`);
+                            return notify_command(`{green-fg}registered slash ${visual}{/green-fg}`);
+                        }
+
+                        else { return notify_command(`failed to register slash ${visual}`) }
+                    }
+
+                    else if (args[1] == 'module') {
+
+                    }
+                }
+
+                else { return notify_command(`invalid command "${args[0]}"`) }
+            }
         }
 
         else if (msg.startsWith('HOTSWAP_COMMAND')) {
             let path = msg.slice(16);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerCommand(path);
-            process.send(`NOTIFY hotswapped ${notif_path}`);
+            notify_hotswap(notif_path);
         }
 
         else if (msg.startsWith('HOTSWAP_SLASH')) {
             let path = msg.slice(15);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerSlash(path);
-            process.send(`NOTIFY hotswapped ${notif_path}`);
+            notify_hotswap(notif_path);
         }
 
         else if (msg.startsWith('HOTSWAP_MODULE')) {
@@ -186,7 +254,7 @@ async function start() {
             // but I wasn't really sure how else to go about it.
             // hopefully this is sound logic
 
-            let path = msg.slice(17);
+            let path = msg.slice(15);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             
             delete require.cache[require.resolve(path)];
@@ -195,7 +263,7 @@ async function start() {
             if (context[name].module_unload) { context[name].module_unload() }
             context[name] = core_module;
 
-            process.send(`NOTIFY hotswapped ${notif_path}`);
+            notify_hotswap(notif_path);
         }
     });
 }

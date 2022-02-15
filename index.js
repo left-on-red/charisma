@@ -104,27 +104,45 @@ let dbproc = child_process.spawn('./rethink/rethinkdb.exe', [ '--directory', `${
 child.stdout.on('data', (chunk) => { log.content = log.content + chunk });
 child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
 
+let commands = [];
+let slashes = [];
+let modules = [];
+
+recur(`${__dirname}\\src\\commands`, (path) => { commands.push(path) });
+recur(`${__dirname}\\src\\slashes`, (path) => { slashes.push(path) });
+recur(`${__dirname}\\src\\core\\modules`, (path) => { modules.push(path) });
+
+let hotswap_command = (path) => { child.send(`HOTSWAP_COMMAND ${path}`) }
+let hotswap_slash = (path) => { child.send(`HOTSWAP_SLASH ${path}`) }
+let hotswap_module = (path) => { child.send(`HOTSWAP_MODULE ${path}`) }
+
 child.on('message', function(msg) {
     if (msg == 'KILL') { process.exit() }
     else if (msg == 'READY') {
-
-        let commands = [];
-        recur(`${__dirname}\\src\\commands`, (path) => { commands.push(path) });
-        chokidar.watch(commands).on('change', (path) => { child.send(`HOTSWAP_COMMAND ${path}`) });
-
-        let slashes = [];
-        recur(`${__dirname}\\src\\slashes`, (path) => { slashes.push(path) });
-        chokidar.watch(slashes).on('change', (path) => { child.send(`HOTSWAP_SLASH ${path}`) });
-
-        let modules = [];
-        recur(`${__dirname}\\src\\core\\modules`, (path) => { modules.push(path) });
-        chokidar.watch(modules).on('change', (path) => { child.send(`HOTSWAP_MODULE ${path}`) });
+        chokidar.watch(commands).on('change', (path) => hotswap_command(path));
+        chokidar.watch(slashes).on('change', (path) => hotswap_slash(path));
+        chokidar.watch(modules).on('change', (path) => hotswap_module(path));
     }
 
     else if (msg.startsWith('NOTIFY')) {
-        let path = msg.slice(7);
-        hotswaps.content = `{right}${path}{/right}`;
+        let text = msg.slice(7);
+        hotswaps.content = `{right}${text}{/right}`;
         setTimeout(() => { hotswaps.content = '' }, 2000);
+    }
+
+    else if (msg.startsWith('LISTEN_COMMAND')) {
+        let str = msg.slice(15);
+        chokidar.watch(str).on('change', (path) => hotswap_command(path));
+    }
+
+    else if (msg.startsWith('LISTEN_SLASH')) {
+        let str = msg.slice(13);
+        chokidar.watch(str).on('change', (path) => hotswap_slash(path));
+    }
+
+    else if (msg.startsWith('LISTEN_MODULE')) {
+        let str = msg.slice(14);
+        chokidar.watch(str).on('change', (path) => hotswap_module(path));
     }
 });
 dbproc.on('exit', function() { child.send('KILL rethink database process terminated unexpectedly...') });
