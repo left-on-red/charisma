@@ -15,7 +15,7 @@ module.exports = class extends Command {
             let result = context.music.check(context);
             if (result == -1) {
                 context.music.instances.get(context.guild.id).connection.disconnect();
-                context.music.instances.delete(context.guild.id);
+                //context.music.instances.delete(context.guild.id);
                 embed.setDescription(`left the channel`);
             }
 

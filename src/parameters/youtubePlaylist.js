@@ -1,6 +1,13 @@
 let ytpl = require('ytpl');
+let CommandContext = require('./../core/CommandContext.js');
 
-module.exports = async function(input, passthrough) {
+/**
+ * 
+ * @param {string} input 
+ * @param {CommandContext} context 
+ * @returns {{pass: boolean, value: any}}
+ */
+module.exports = async function(input, context) {
     var output = { pass: false, value: null }
     
     if (input.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
@@ -21,7 +28,7 @@ module.exports = async function(input, passthrough) {
             output.value = arr;
         }
 
-        catch(error) { console.error(error) }
+        catch(error) { context.logging.error(`guild.${context.guild.id}`, error) }
     }
 
     return output;

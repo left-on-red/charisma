@@ -42,16 +42,14 @@ class MusicModule extends CoreModule {
         this.instances.get(id).connection.on('stateChange', (old_state, new_state) => {
             if (new_state.status == voice.VoiceConnectionStatus.Disconnected) {
                 this.instances.get(id).player.stop();
-                this.instances.get(id).connection.disconnect();
+                //this.instances.get(id).connection.disconnect();
                 this.instances.delete(id);
             }
         });
 
         // skips current track if it errors out
         this.instances.get(id).player.on('error', (error) => {
-            console.log(`ERROR ON SONG:`);
-            console.log(this.instances.get(id).queue[0]);
-            console.error(error);
+            this.context.logging.error(`guild.${id}`, error);
             this.instances.get(id).queue.shift();
             this.play(id, this.instances.get(id).queue[0]);
         });
@@ -62,17 +60,18 @@ class MusicModule extends CoreModule {
             this.instances.get(id).state = 'PLAYING';
 
             let stream = ytdl(this.instances.get(id).queue[0].url, { filter: 'audioonly', highWaterMark: 1 << 25 });
-
             let resource = voice.createAudioResource(stream, { inputType: voice.StreamType.Arbitrary, inlineVolume: true });
             resource.volume.setVolume(this.instances.get(id).volume / 100);
 
             this.instances.get(id).resource = resource;
             this.instances.get(id).player.play(resource);
+            this.context.logging.ok(`guild.${id}`, `started playing song: ${this.instances.get(id).queue[0].url}`)
         }
 
         else {
             this.instances.get(id).resource = null;
             this.instances.get(id).state = 'IDLE';
+            this.context.logging.ok(`guild.${id}`, 'music player reached the end of the queue...');
         }
     }
 
@@ -98,6 +97,9 @@ class MusicModule extends CoreModule {
                 this.play(id, video);
             }
         }
+
+        this.context.logging.ok(`guild.${id}`, `added song: ${video.url}`);
+        this.context.logging.debug(`guild.${id}`, video);
     }
 
     playlist(id, arr) { for (let a = 0; a < arr.length; a++) { this.add(id, arr[a]) } }
