@@ -151,6 +151,8 @@ async function start() {
 
         context.system.ok(`logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 
+        (await client.guilds.fetch()).forEach((guild) => { context.logging.addStream(`guild.${guild.id}`) });
+
         process.send('READY');
     });
 
