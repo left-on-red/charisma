@@ -192,22 +192,22 @@ class InventoryInstance {
         }
     }
 
-    static addMoney = async (context, id, money) => {
-        let user = await context.data._get('inventory', id);
+    addMoney = async (money) => {
+        let user = await this.context.data._get('inventory', this.id);
         let cloned = clone(user);
         user.balance += money;
-        await context.data._update('inventory', id, user, cloned);
+        await this.context.data._update('inventory', this.id, user, cloned);
     }
 
-    static removeMoney = async (context, id, money) => {
-        let user = await context.data._get('inventory', id);
+    removeMoney = async (money) => {
+        let user = await this.context.data._get('inventory', this.id);
         let cloned = clone(user);
         if ((user.balance - money) < 0) { throw new Error(`the user can't have a negative balance`) }
         user.balance -= money;
-        await context.data._update('inventory', id, user, cloned);
+        await this.context.data._update('inventory', this.id, user, cloned);
     }
 
-    static getMoney = async (context, id) => (await context.data._get('inventory', id)).balance;
+    getMoney = async () => (await this.context.data._get('inventory', this.id)).balance;
 }
 
 class InventoryModule extends CoreModule {

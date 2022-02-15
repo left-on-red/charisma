@@ -18,7 +18,7 @@ module.exports = class extends Command {
             embed.setColor(context.config.bot.accent);
 
             if (items[parameters[0]].tags.includes('container')) {
-                let inventory = new context.inventory(context.user.id, context);
+                let inventory = context.inventory.get(context.user.id);
                 await inventory.init();
 
                 if (inventory.containers.has(parameters[0])) {

@@ -1,7 +1,7 @@
 function inventoryHelper(context) {
     let self = this;
     self.context = context;
-    self.inventory = new self.context.inventory(self.context.user.id, context);
+    self.inventory = self.context.inventory.get(self.context.user.id);
 
     self.init = async function() { await self.inventory.init() }
 
@@ -83,7 +83,7 @@ module.exports = class extends Command {
         this.push([
             { type: 'string', required: true, value: 'export' }
         ], async (context) => {
-            let inventory = new context.inventory(context.user.id, context);
+            let inventory = context.inventory.get(context.user.id);
             await inventory.init();
 
             let json = JSON.stringify(inventory.data);

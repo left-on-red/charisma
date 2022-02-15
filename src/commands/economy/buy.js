@@ -23,7 +23,7 @@ module.exports = class extends Command {
             let items = context.economy.items;
             let item = items[name];
     
-            let inventory = new context.inventory(context.user.id, context);
+            let inventory = context.inventory.get(context.user.id);
             await inventory.init();
     
             if (context.shop.isAvailable(name)) {
@@ -31,7 +31,7 @@ module.exports = class extends Command {
                 let balance = await context.inventory.getMoney(context, context.user.id);
                 if (balance >= (price * quantity)) {
                     if (inventory.items.get(name) == undefined || inventory.items.get(name) + quantity <= 1000000) {
-                        await context.inventory.removeMoney(context, context.user.id, price * quantity);
+                        await inventory.removeMoney(price * quantity);
                         inventory.items.add(name, quantity);
                         await inventory.append();
     

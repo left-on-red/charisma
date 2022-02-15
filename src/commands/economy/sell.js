@@ -20,7 +20,7 @@ module.exports = class extends Command {
             let quantity = 1;
             if (parameters[1]) { quantity = parameters[1] }
         
-            let inventory = new context.inventory(context.user.id, context);
+            let inventory = context.inventory.get(context.user.id);
             await inventory.init();
 
             if (!(context.economy.items[parameters[0]].tags.includes('key') || context.economy.items[parameters[0]].tags.includes('container'))) {
@@ -34,7 +34,7 @@ module.exports = class extends Command {
                         let individuals = quantity == 1 ? '' : ` *(${Math.floor(total / quantity)}g each)*`;
     
                         await inventory.append();
-                        await context.inventory.addMoney(context, context.user.id, total);
+                        await inventory.addMoney(total);
                         embed.setDescription(`you sold ${context.economy.items[parameters[0]].emoji}x${quantity} and got **${total}g**${individuals}`);
                     }
                 }
@@ -57,7 +57,7 @@ module.exports = class extends Command {
             embed.setColor(context.config.bot.accent);
 
             if (!(context.economy.items[parameters[0]].tags.includes('key') || context.economy.items[parameters[0]].tags.includes('container'))) {
-                let inventory = new context.inventory(context.user.id, context);
+                let inventory = context.inventory.get(context.user.id);
                 await inventory.init();
 
                 if (inventory.items.has(parameters[0])) {
@@ -79,7 +79,7 @@ module.exports = class extends Command {
                             let individuals = quantity == 1 ? '' : ` *(${value}g each)*`;
 
                             await inventory.append();
-                            await context.inventory.addMoney(context, context.user.id, total);
+                            await inventory.addMoney(total);
 
                             editEmbed.setDescription(`you sold ${context.economy.items[parameters[0]].emoji}x${quantity} and got **${total}g**${individuals}`)
                             sent.edit({ embeds: [editEmbed] });
@@ -93,7 +93,7 @@ module.exports = class extends Command {
                         inventory.items.remove(parameters[0], quantity);
                         let individuals = quantity == 1 ? '' : ` *(${value}g each)*`;
 
-                        inventory.money.add(total);
+                        inventory.addMoney(total);
                         await inventory.append();
 
                         embed.setDescription(`you sold ${context.economy.items[parameters[0]].emoji}x${quantity} and got **${total}g**${individuals}`);

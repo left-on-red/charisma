@@ -13,7 +13,8 @@ module.exports = class extends Command {
             let embed = new context.Discord.MessageEmbed();
             embed.setColor(context.config.bot.accent);
     
-            let balance = await context.inventory.getMoney(context, context.user.id);
+            let inventory = context.inventory.get(context.user.id);
+            let balance = await inventory.getMoney();
     
             embed.setDescription(`**${balance}g**`);
             context.channel.send({ embeds: [embed] });

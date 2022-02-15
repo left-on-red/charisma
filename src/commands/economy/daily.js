@@ -63,7 +63,8 @@ module.exports = class extends Command {
             let day = date.getDate();
             let lastDaily = context.local.user.daily;
             if (day != lastDaily) {
-                await context.inventory.addMoney(context, context.user.id, 200);
+                let inventory = context.inventory.get(context.user.id);
+                await inventory.addMoney(200);
                 context.local.user.daily = day;
                 embed.setDescription(`**200g** was added to your balance`);
             }

@@ -50,7 +50,7 @@ module.exports = class extends Command {
             let embed = new context.Discord.MessageEmbed();
             embed.setColor(context.config.bot.accent);
     
-            let inventory = new context.inventory(context.user.id, context);
+            let inventory = context.inventory.get(context.user.id);
             await inventory.init();
             
             let table = clone(context.economy.tables.fishing.default);

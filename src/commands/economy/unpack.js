@@ -49,7 +49,7 @@ module.exports = class extends Command {
                     response.setDescription(`you opened the ${items[parameters[0]].emoji} and got:\n${boxed.join(' ')}`);
                 }
     
-                catch(e) { console.error(e); response.setDescription(`an error occured while unpacking`) }
+                catch(error) { context.log.error(error); response.setDescription(`an error occured while unpacking...`) }
     
                 sent.edit({ embeds: [response] });
             });
