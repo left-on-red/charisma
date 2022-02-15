@@ -46,7 +46,6 @@ class LoggingManager {
 
 
     log(channel, string) {
-        if (!this.streams.has(channel)) { this.addStream(channel) }
         let stream = this.streams.get(channel);
         stream.write(`${string}\n`);
 
