@@ -10,6 +10,7 @@ module.exports = class extends ImageCommand {
                 .orderedDither('Blue', '2x2')
                 .orderedDither('Magenta', '2x2')
                 .orderedDither('Yellow', '2x2')
-                .orderedDither('Cyan', '2x2') });
+                .orderedDither('Cyan', '2x2')
+            });
     }
 }
