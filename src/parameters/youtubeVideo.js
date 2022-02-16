@@ -11,7 +11,7 @@ module.exports = async function(input, passthrough) {
             output.value = {
                 author: video.videoDetails.author.name,
                 duration: parseInt(video.videoDetails.lengthSeconds) * 1000,
-                thumbnail: video.videoDetails.thumbnail.thumbnails[0].url,
+                thumbnail: video.videoDetails.thumbnails[0].url,
                 title: video.videoDetails.title,
                 url: video.videoDetails.video_url
             }
