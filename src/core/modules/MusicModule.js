@@ -41,8 +41,8 @@ class MusicModule extends CoreModule {
 
         this.instances.get(id).connection.on('stateChange', (old_state, new_state) => {
             if (new_state.status == voice.VoiceConnectionStatus.Disconnected) {
-                this.instances.get(id).player.stop();
-                //this.instances.get(id).connection.disconnect();
+                if (this.instances.get(id)) { this.instances.get(id).player.stop() }
+                else { this.context.logging.debug(id, this.instances.get(id)) }
                 this.instances.delete(id);
             }
         });
