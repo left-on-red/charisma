@@ -78,7 +78,8 @@ class AssetManager {
     registerParameter(path) {
         path = path.replace(/\\/g, '/');
         let name = path.split('/')[path.split('/').length - 1].split('.')[0];
-        this.context.commands.parameters.set(name, require(path));
+        let instance = new (require(path));
+        this.context.commands.parameters.set(name, instance.handler);
 
         return true;
     }

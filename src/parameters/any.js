@@ -1,5 +1,10 @@
+let CommandParameter = require('./../core/CommandParameter.js');
+
 // is anything(always true)
-module.exports = function(input, passthrough) {
-    let output = { pass: true, value: input }
-    return output;
+module.exports = class extends CommandParameter {
+    constructor() {
+        super((input, passthrough) => {
+            return { pass: true, value: input } 
+        });
+    }
 }

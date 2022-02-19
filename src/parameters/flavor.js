@@ -1,5 +1,12 @@
-module.exports = function(input, passthrough) {
-    var output = { pass: false, value: null }
-    if (passthrough.flavors.get(input)) { output.pass = true; output.value = input; }
-    return output;
+let CommandParameter = require('./../core/CommandParameter.js');
+
+// is a valid charisma flavor
+module.exports = class extends CommandParameter {
+    constructor() {
+        super((input, context) => {
+            let output = { pass: false, value: null }
+            if (context.flavors.get(input.toLowerCase())) { output.pass = true; output.value = input.toLowerCase(); }
+            return output;
+        });
+    }
 }
