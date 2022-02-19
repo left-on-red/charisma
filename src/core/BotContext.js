@@ -3,6 +3,8 @@ let Discord = require('discord.js');
 let Configs = require('./Configs.js');
 let LoggingManager = require('./LoggingManager.js');
 
+let CommandConfig = require('./CommandConfig.js');
+
 class BotContext {
     /**
      * 
@@ -37,10 +39,18 @@ class BotContext {
         }
 
         this.commands = {
-            functions: new Map(),
-            configs: new Map(),
             permissions: {},
+            
+            /** @type {Map<string, (context: CommandContext, parameters: any[]) => {}>} */
+            functions: new Map(),
+            
+            /** @type {Map<string, CommandConfig>} */
+            configs: new Map(),
+
+            /** @type {Map<string, string>} */
             aliases: new Map(),
+
+            /** @type {Map<string, (input: string, context: CommandContext) => { pass: boolean, value: any }>} */
             parameters: new Map()
         }
         

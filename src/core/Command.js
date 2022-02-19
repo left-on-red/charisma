@@ -1,12 +1,5 @@
 let CommandContext = require('./CommandContext.js');
-
-/**
- * @typedef {Object} CommandParam
- * @property {string} type - the type of the parameter
- * @property {string} name - the name of the parameter
- * @property {boolean} required - whether or not the parameter is required
- * @property {string} value - the required value of the parameter
- */
+let CommandConfig = require('./CommandConfig.js');
 
 /**
  * @typedef {Object} CommandStructure
@@ -15,15 +8,11 @@ let CommandContext = require('./CommandContext.js');
  */
 
 /**
- * @typedef {Object} CommandConfig
- * @property {string} name
- * @property {string} description
- * @property {string[]} aliases
- * @property {string[]} permissions
- * @property {string[]} tags
- * @property {boolean} nsfw
- * @property {boolean} hidden
- * @property {number} cooldown
+ * @typedef {Object} CommandParameter
+ * @property {string} type - the type of the parameter
+ * @property {string} name - the name of the parameter
+ * @property {boolean} required - whether or not the parameter is required
+ * @property {string} value - the required value of the parameter
  */
 
 module.exports = class Command {
@@ -63,7 +52,7 @@ module.exports = class Command {
 
     /**
      * 
-     * @param {CommandParam[]} params 
+     * @param {CommandParameter[]} params 
      * @param {(context: CommandContext, parameters: any[]) => {}} command 
      */
     push(params, command) { this.data.push({ params, command }) }
