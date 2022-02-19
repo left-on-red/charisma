@@ -107,12 +107,15 @@ child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
 let commands = [];
 let slashes = [];
 let modules = [];
+let parameters = [];
 
 recur(`${__dirname}\\src\\commands`, (path) => { commands.push(path) });
+recur(`${__dirname}\\src\\parameters`, (path) => { parameters.push(path) });
 recur(`${__dirname}\\src\\slashes`, (path) => { slashes.push(path) });
 recur(`${__dirname}\\src\\core\\modules`, (path) => { modules.push(path) });
 
 let hotswap_command = (path) => { child.send(`HOTSWAP_COMMAND ${path}`) }
+let hotswap_parameter = (path) => { child.send(`HOTSWAP_PARAMETER ${path}`) }
 let hotswap_slash = (path) => { child.send(`HOTSWAP_SLASH ${path}`) }
 let hotswap_module = (path) => { child.send(`HOTSWAP_MODULE ${path}`) }
 
@@ -120,6 +123,7 @@ child.on('message', function(msg) {
     if (msg == 'KILL') { process.exit() }
     else if (msg == 'READY') {
         chokidar.watch(commands).on('change', (path) => hotswap_command(path));
+        chokidar.watch(parameters).on('change', (path) => hotswap_parameter(path));
         chokidar.watch(slashes).on('change', (path) => hotswap_slash(path));
         chokidar.watch(modules).on('change', (path) => hotswap_module(path));
     }
@@ -133,6 +137,11 @@ child.on('message', function(msg) {
     else if (msg.startsWith('LISTEN_COMMAND')) {
         let str = msg.slice(15);
         chokidar.watch(str).on('change', (path) => hotswap_command(path));
+    }
+
+    else if (msg.startsWith('LISTEN_PARAMETER')) {
+        let str = msg.slice(17);
+        chokidar.watch(str).on('change', (path) => hotswap_parameter(path));
     }
 
     else if (msg.startsWith('LISTEN_SLASH')) {

@@ -76,12 +76,21 @@ class AssetManager {
     }
 
     registerParameter(path) {
-        path = path.replace(/\\/g, '/');
-        let name = path.split('/')[path.split('/').length - 1].split('.')[0];
-        let instance = new (require(path));
-        this.context.commands.parameters.set(name, instance.handler);
+        delete require.cache[require.resolve(path)];
 
-        return true;
+        let success = false;
+
+        try {
+            path = path.replace(/\\/g, '/');
+            let name = path.split('/')[path.split('/').length - 1].split('.')[0];
+            let instance = new (require(path));
+            this.context.commands.parameters.set(name, instance.handler);
+            success = true;
+        }
+
+        catch(error) { this.context.system.error(error) }
+
+        return success;
     }
 
     async registerDaemon(path) {

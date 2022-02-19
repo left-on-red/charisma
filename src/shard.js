@@ -197,7 +197,7 @@ async function start() {
                 }
 
                 else if (args[0] == 'register') {
-                    let types = ['command', 'slash', 'module'];
+                    let types = ['command', 'parameter', 'slash', 'module'];
 
                     if (!args[1]) { return notify_command(`register type is required (${types.join(', ')})`) }
                     if (!types.includes(args[1])) { return notify_command(`invalid register type "${args[1]}"; expected (${types.join(', ')})`) }
@@ -216,6 +216,16 @@ async function start() {
                         }
 
                         else { return notify_command(`failed to register command ${visual}`) }
+                    }
+
+                    else if (args[1] == 'parameter') {
+                        let success = manager.registerParameter(path);
+                        if (success) {
+                            process.send(`LISTEN_PARAMETER ${path}`);
+                            return notify_command(`{green-fg}registered parameter ${visual}{/green-fg}`);
+                        }
+
+                        else { return notify_command(`failed to register parameter ${visual}`) }
                     }
 
                     else if (args[1] == 'slash') {
@@ -241,6 +251,13 @@ async function start() {
             let path = msg.slice(16);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerCommand(path);
+            notify_hotswap(notif_path);
+        }
+
+        else if (msg.startsWith('HOTSWAP_PARAMETER')) {
+            let path = msg.slice(18);
+            let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
+            manager.registerParameter(path);
             notify_hotswap(notif_path);
         }
 
