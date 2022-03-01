@@ -2,11 +2,15 @@ let SlashContext = require('./SlashContext.js');
 let Discord = require('discord.js');
 
 /**
- * @typedef {'SUB_COMMAND'|'SUB_COMMAND_GROUP'|'STRING'|'INTEGER'|'BOOLEAN'|'USER'|'CHANNEL'|'ROLE'|'MENTIONABLE'|'NUMBER'} SlashOptionType
+ * @typedef {'SUB_COMMAND'|'SUB_COMMAND_GROUP'|'STRING'|'INTEGER'|'BOOLEAN'|'USER'|'CHANNEL'|'ROLE'|'MENTIONABLE'|'NUMBER'|'ATTACHMENT'} SlashOptionType
  */
 
 /**
  * @typedef {name:string, value:string|number} SlashOptionChoice
+ */
+
+/**
+ * @typedef {'GUILD_TEXT'|'DM'|'GUILD_VOICE'|'GROUP_DM'|'GUILD_CATEGORY'|'GUILD_NEWS'|'GUILD_NEWS_THREAD'|'GUILD_PUBLIC_THREAD'|'GUILD_PRIVATE_THREAD'|'GUILD_STAGE_VOICE'} ChannelType
  */
 
 class Slash {
@@ -30,13 +34,10 @@ class Slash {
 
     /**
      * 
-     * @param {string} name 
-     * @param {string} description 
-     * @param {SlashOptionType} type 
-     * @param {boolean} required 
+     * @param {{name: string, description: string, type: SlashOptionType, required: boolean, autocomplete: boolean, min: number, max: number, channels: ChannelType[]}} obj 
      */
-    option(name, description, type, required) {
-        let opt = new SlashOption(name, description, type, required);
+    option(obj) {
+        let opt = new SlashOption(obj.name, obj.description, obj.type, obj.required, obj.autocomplete, obj.channels, obj.min, obj.max);
         this._options.push(opt);
         return opt;
     }
@@ -61,10 +62,18 @@ class Slash {
                 name: opt.name,
                 description: opt.description,
                 type: opt.type,
-                required: opt.required ? true : false
+                required: opt.required ? true : false,
+                autocomplete: opt.autocomplete ? true : false
             }
 
-            if (['SUB_COMMAND', 'SUB_COMMAND_GROUP'].includes(opt_obj.type)) { delete opt_obj.required }
+            if (opt._choices) { opt_obj.choices = opt._choices }
+
+            if (['INTEGER', 'NUMBER'].includes(opt_obj.type)) {
+                if (opt.min) { opt_obj.minValue = opt.min }
+                if (opt.max) { opt_obj.maxValue = opt.max }
+            }
+
+            if (opt_obj.type == 'CHANNEL' && opt.channels) { opt_obj.channelTypes = opt.channels }
 
             if (opt._options.length > 0) { opt_obj.options = [] }
             for (let o = 0; o < opt._options.length; o++) { recur(opt_obj, opt._options[o]) }
@@ -96,12 +105,21 @@ class SlashOption extends Slash {
      * @param {string} description 
      * @param {SlashOptionType} type 
      * @param {boolean} required 
+     * @param {boolean} autocomplete
+     * @param {ChannelType[]} channels
+     * @param {number} min
+     * @param {number} max
      */
-    constructor(name, description, type, required) {
+    constructor(name, description, type, required, autocomplete, channels, min, max) {
         super(name, description);
         
         this.type = type;
-        this.required = required;
+        this.required = required ? true : false;
+        this.autocomplete = autocomplete ? true : false;
+
+        if (channels) { this.channels = channels }
+        if (min != undefined) { this.min = min }
+        if (max != undefined) { this.max = max }
     }
 
     /**
