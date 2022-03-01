@@ -13,7 +13,7 @@ module.exports = class extends CommandParameter {
                     let arr = [];
                     for (let i = 0; i < playlist.items.length; i++) {
                         arr.push({
-                            author: playlist.items[i].author,
+                            author: playlist.items[i].author.name,
                             duration: playlist.items[i].durationSec * 1000,
                             thumbnail: playlist.items[i].bestThumbnail.url,
                             title: playlist.items[i].title,
