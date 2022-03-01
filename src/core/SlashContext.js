@@ -24,20 +24,36 @@ class SlashContext extends BotContext {
         this.local = local;
     }
 
-    /** @param {string} message */
+    /**
+     * @param {string|Discord.InteractionReplyOptions} message
+     * @returns {Promise<Discord.Message>|Promise<void>}
+     */
     reply(message) { return this.interaction.reply(message) }
 
-    /** @param {string} message */
+    /**
+     * @param {string|Discord.InteractionReplyOptions} message
+     * @returns {Promise<Discord.Message|void>}
+     */
     editReply(message) { return this.interaction.editReply(message) }
 
+    /** @returns {Promise<Discord.Message>} */
     fetchReply() { return this.interaction.fetchReply() }
 
+    /** @returns {Promise<void>} */
     deleteReply() { return this.interaction.deleteReply() }
 
-    /** @param {string} message */
+    /**
+     * @param {string|Discord.InteractionReplyOptions} message
+     * @returns {Promise<Discord.Message|void>}
+     */
     followUp(message) { return this.interaction.followUp(message) }
 
-    editDefer() { return this.interaction.defer() }
+    /**
+     * 
+     * @param {Discord.InteractionDeferReplyOptions} opts 
+     * @returns {Promise<Discord.Message|void>}
+     */
+    defer(opts) { return this.interaction.deferReply(opts) }
 
     /** @param {string} message */
     ephemeral(message) { return this.interaction.reply({ content: message, ephemeral: true }) }
