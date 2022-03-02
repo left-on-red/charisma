@@ -262,7 +262,7 @@ async function start() {
         }
 
         else if (msg.startsWith('HOTSWAP_SLASH')) {
-            let path = msg.slice(15);
+            let path = msg.slice(14);
             let notif_path = `src\\${path.slice(__dirname.length+1)}`.replace(/\\/g, '/');
             manager.registerSlash(path);
             notify_hotswap(notif_path);
