@@ -61,11 +61,11 @@ class Slash {
             let opt_obj = {
                 name: opt.name,
                 description: opt.description,
-                type: opt.type,
-                required: opt.required ? true : false,
-                autocomplete: opt.autocomplete ? true : false
+                type: opt.type
             }
 
+            if (opt.required != undefined) { opt_obj.required = opt.required }
+            if (opt.autocomplete != undefined) { opt_obj.autocomplete = opt.autocomplete }
             if (opt._choices) { opt_obj.choices = opt._choices }
 
             if (['INTEGER', 'NUMBER'].includes(opt_obj.type)) {
