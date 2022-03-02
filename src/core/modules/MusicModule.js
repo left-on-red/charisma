@@ -54,14 +54,14 @@ class MusicModule extends CoreModule {
 
         this.errors = [
             `you're not in a voice channel`,
-            `I'm not in a voice channel`,
             `I'm not in that voice channel`,
             `I don't have permission to speak in this channel`
         ];
 
         this.timer = setInterval(() => {
-            this.jukeboxes.forEach((v, k) => {
-                if (v.message.deleted) { this.jukeboxes.delete(k); return; }
+            this.jukeboxes.forEach(async (v, k) => {
+                let message = await v.message.channel.messages.fetch(v.message.id);
+                if (!message) { this.jukeboxes.delete(k); return; }
                 if (!this.instances.get(k)) {
                     v.inactive += 100;
                     if (v.inactive >= 600 * 1000) {
@@ -78,7 +78,33 @@ class MusicModule extends CoreModule {
         });
     }
 
-    setup(id) {
+    /**
+     * 
+     * @param {CommandContext} context 
+     */
+    setup(context) {
+        let id = context.guild.id;
+
+        let connection = voice.joinVoiceChannel({
+            channelId: context.member.voice.channel.id,
+            guildId: context.member.guild.id,
+            adapterCreator: context.guild.voiceAdapterCreator,
+            selfMute: false,
+            selfDeaf: false
+        });
+
+        let player = voice.createAudioPlayer();
+        connection.subscribe(player);
+
+        this.instances.set(id, {
+            connection: connection,
+            player: player,
+            resource: null,
+            queue: [],
+            state: 'PLAYING',
+            volume: 100
+        });
+
         this.instances.get(id).player.on(voice.AudioPlayerStatus.Idle, () => {
             if (this.instances.get(id).state == 'SHUFFLED') { this.play(id, this.instances.get(id).queue[0]) }
             else if (this.instances.get(id).state == 'PLAYING') {
@@ -123,8 +149,8 @@ class MusicModule extends CoreModule {
         else {
             this.instances.get(id).resource = null;
             this.instances.get(id).state = 'IDLE';
+            this.instances.get(id).connection.disconnect();
             this.context.logging.ok(`guild.${id}`, 'music player reached the end of the queue...');
-
         }
 
         this.updateJukeboxEmbed(id);
@@ -181,12 +207,8 @@ class MusicModule extends CoreModule {
      */
     check(context) {
         if (context.member.voice.channel) {
-            if (context.guild.me.voice.channel) {
-                if (context.member.voice.channel.id == context.guild.me.voice.channel.id) {
-                    if (context.member.voice.channel.permissionsFor(context.client.user).has('SPEAK')) { return -1 }
-                    else { return 3 }
-                }
-    
+            if (!context.guild.me.voice.channel || (context.member.voice.channel.id == context.guild.me.voice.channel.id)) {
+                if (context.member.voice.channel.permissionsFor(context.client.user).has('SPEAK')) { return -1 }
                 else { return 2 }
             }
     
@@ -220,6 +242,8 @@ class MusicModule extends CoreModule {
             let remaining = convert(ms, overHour(ms));
     
             embed.addField(`Remaining`, `${queue.length - 1} Tracks *(${remaining} total)*`);
+
+            embed.addField('Next', `${queue[1] ? queue[1].title : '---'}`);
     
             let bar = progressBar({ total: 100, width: 10, incomplete: ' ', complete: '=', style: function(complete, incomplete) { return `\`[${complete}>${incomplete}]\`` } });
             embed.addField(`Volume`, `${bar(instance.volume)} (${instance.volume}/100)`);
@@ -227,7 +251,11 @@ class MusicModule extends CoreModule {
         }
 
         else {
-            embed.setDescription(`nothing is currently playing...`);
+            embed.addField(`Currently Playing`, '---');
+            embed.addField('Author', '---');
+            embed.addField('Remaining', `0 Tracks *(0:00 total)*`);
+            embed.addField('Next', '---');
+            embed.addField('volume', '---');
         }
 
         return embed;
