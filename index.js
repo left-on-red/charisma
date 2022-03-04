@@ -99,7 +99,7 @@ let child = child_process.fork('src/bot.js', { silent: true });
 
 // mongod.exe --dbpath ./data --port 531
 // rethinkdb.exe --bind all --driver-port 531
-let dbproc = child_process.spawn('./rethink/rethinkdb.exe', [ '--directory', `${__dirname}/rethink/data`, '--driver-port', '531']);
+let dbproc = child_process.spawn('./rethink/rethinkdb.exe', [ '--directory', `${__dirname}/rethink/data`, '--driver-port', '531', '--no-http-admin']);
 
 child.stdout.on('data', (chunk) => { log.content = log.content + chunk });
 child.stderr.on('data', (chunk) => { log.content = log.content + chunk });
