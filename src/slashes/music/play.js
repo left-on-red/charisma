@@ -11,20 +11,29 @@ module.exports = class extends Slash {
         super('play', 'play music');
 
         // /play single <url>
-        this
-            .option({ name: 'single', description: 'add a single track to the queue', type: 'SUB_COMMAND' })
-            .option({ name: 'url', description: 'the url of the track', type: 'STRING', required: true });
+        this.append(
+            Slash.Subcommand('single', 'add a single track to the queue')
+            .append(
+                Slash.String('url', 'the url of the track', true)
+            )
+        );
 
         // /play playlist <url>
-        this
-            .option({ name: 'playlist', description: `add an entire playlist to the queue`, type: 'SUB_COMMAND' })
-            .option({ name: 'url', description: 'the url of the playlist', type: 'STRING', required: true });
+        this.append(
+            Slash.Subcommand('playlist', 'add an entire playlist to the queue')
+            .append(
+                Slash.String('url', 'the url of the playlist', true)
+            )
+        );
 
 
         // /play search <terms>
-        this
-            .option({ name: 'search', description: 'search for music to add to the queue', type: 'SUB_COMMAND' })
-            .option({ name: 'terms', description: 'the terms to search for', type: 'STRING', required: true });
+        this.append(
+            Slash.Subcommand('search', 'search for music to add to the queue')
+            .append(
+                Slash.String('terms', 'the terms to search for', true)
+            )
+        );
 
         this.interact(async (context, options) => {
             let sub = options.getSubcommand(true);

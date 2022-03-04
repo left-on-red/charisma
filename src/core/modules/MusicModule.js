@@ -116,10 +116,16 @@ class MusicModule extends CoreModule {
         this.instances.get(id).connection.on('stateChange', (old_state, new_state) => {
             if (new_state.status == voice.VoiceConnectionStatus.Disconnected) {
                 if (this.instances.get(id)) { this.instances.get(id).player.stop() }
-                else { this.context.logging.debug(id, this.instances.get(id)) }
-                this.updateJukeboxEmbed(id);
                 this.instances.delete(id);
+                this.updateJukeboxEmbed(id);
             }
+        });
+
+        // kills connection if connection error occurs
+        this.instances.get(id).connection.on('error', (error) => {
+            this.context.logging.error(`guild.${id}`, error);
+            if (this.instances.get(id)) { this.instances.get(id).player.stop() }
+            this.instances.delete(id);
         });
 
         // skips current track if it errors out

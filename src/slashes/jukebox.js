@@ -4,6 +4,8 @@ module.exports = class extends Slash {
     constructor() {
         super('jukebox', 'create a jukebox message for the current music stream');
 
+        this.append(Slash.SubcommandGroup('sub2', 'sub2 desc'));
+
         this.interact(async (context, options) => {
             let result = context.music.check(context);
             if (result == -1) {

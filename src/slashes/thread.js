@@ -6,20 +6,26 @@ module.exports = class extends Slash {
         super('thread', 'manage the threads on the server');
 
         // /thread create <name>
-        this
-            .option({ name: 'create', description: 'create a thread under the current channel', type: 'SUB_COMMAND' })
-            .option({ name: 'name', description: 'the name of the thread you want to create', type: 'STRING', required: true });
+        this.append(
+            Slash.Subcommand('create', 'creates a thread under the current channel')
+            .append(
+                Slash.String('name', 'the name of the thread that you want to create', true)
+            )
+        );
 
         // /thread destroy
-        this.option({ name: 'destroy', description: `destroys the thread that you're currently in`, type: 'SUB_COMMAND' });
+        this.append(Slash.Subcommand('destroy', `destroys the thread that you're currently in`));
 
         // /thread archive
-        this.option({ name: 'archive', description: `archives the thread that you're currently in`, type: 'SUB_COMMAND' });
+        this.append(Slash.Subcommand('archive', `archives the thread that you're currently in`));
 
         // /thread rename <name>
-        this
-            .option({ name: 'rename', description: `rename's the thread that you're currently in`, type: 'SUB_COMMAND' })
-            .option({ name: 'name', description: 'the name that you want to rename the thread to', type: 'STRING', required: true });
+        this.append(
+            Slash.Subcommand('rename', `renames the thread that you're currently in`)
+            .append(
+                Slash.String('name', 'the name that you want to rename the thread to', true)
+            )
+        );
 
         this.interact(async (context, options) => {
             let sub = options.getSubcommand(true);

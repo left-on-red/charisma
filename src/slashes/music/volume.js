@@ -1,11 +1,10 @@
 let Slash = require('./../../core/Slash.js');
-let Discord = require('discord.js');
 
 module.exports = class extends Slash {
     constructor() {
         super('volume', 'change the volume of the music stream');
 
-        this.option({ name: 'volume', description: 'the volume level', type: 'INTEGER', required: true, min: 0, max: 100 });
+        this.append(Slash.Integer('volume', 'the volume level', true).min(0).max(100));
 
         this.interact(async (context, options) => {
             let result = context.music.check(context);

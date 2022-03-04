@@ -13,6 +13,10 @@ let Discord = require('discord.js');
  * @typedef {'GUILD_TEXT'|'DM'|'GUILD_VOICE'|'GROUP_DM'|'GUILD_CATEGORY'|'GUILD_NEWS'|'GUILD_NEWS_THREAD'|'GUILD_PUBLIC_THREAD'|'GUILD_PRIVATE_THREAD'|'GUILD_STAGE_VOICE'} ChannelType
  */
 
+/**
+ * @typedef {{name: string, description: string, type: SlashOptionType, required: boolean, autocomplete: boolean, min: number, max: number, channels: ChannelType[]}} SlashOptionRaw
+ */
+
 class Slash {
 
     /**
@@ -34,15 +38,137 @@ class Slash {
 
     /**
      * 
-     * @param {{name: string, description: string, type: SlashOptionType, required: boolean, autocomplete: boolean, min: number, max: number, channels: ChannelType[]}} obj 
+     * @param {SlashOption|SlashOption[]} opt 
+     * @return {Slash}
      */
-    option(obj) {
-        let opt = new SlashOption(obj.name, obj.description, obj.type, obj.required, obj.autocomplete, obj.channels, obj.min, obj.max);
-        this._options.push(opt);
-        return opt;
+    append(opt) {
+        if (!(opt instanceof Array)) { opt = [opt] }
+        for (let o = 0; o < opt.length; o++) { this._options.push(opt[o]) }
+        return this;
     }
 
     /**
+     * 
+     * @param {string} name 
+     * @param {string} description
+     * @returns {SlashOption}
+     */
+     static Subcommand(name, description) {
+        return new SlashOption(name, description, 'SUB_COMMAND');
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description
+     * @returns {SlashOption} 
+     */
+    static SubcommandGroup(name, description) {
+        return new SlashOption(name, description, 'SUB_COMMAND_GROUP');
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static String(name, description, required) {
+        return new SlashOption(name, description, 'STRING', required);
+    }
+
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Integer(name, description, required) {
+        return new SlashOption(name, description, 'INTEGER', required)
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Boolean(name, description, required) {
+        return new SlashOption(name, description, 'BOOLEAN', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static User(name, description, required) {
+        return new SlashOption(name, description, 'USER', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Channel(name, description, required) {
+        return new SlashOption(name, description, 'CHANNEL', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Role(name, description, required) {
+        return new SlashOption(name, description, 'ROLE', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Mentionable(name, description, required) {
+        return new SlashOption(name, description, 'MENTIONABLE', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Number(name, description, required) {
+        return new SlashOption(name, description, 'NUMBER', required);
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} description 
+     * @param {boolean} required 
+     * @returns {SlashOption}
+     */
+    static Attachment(name, description, required) {
+        return new SlashOption(name, description, 'ATTACHMENT', required);
+    }
+
+    /**
+     * converts the `Slash` hierarchy into raw API friendly data
      * @returns {Discord.ApplicationCommandData}
      */
     raw() {
@@ -66,7 +192,7 @@ class Slash {
 
             if (opt.required != undefined) { opt_obj.required = opt.required }
             if (opt.autocomplete != undefined) { opt_obj.autocomplete = opt.autocomplete }
-            if (opt._choices) { opt_obj.choices = opt._choices }
+            if (opt.choices) { opt_obj.choices = opt.choices }
 
             if (['INTEGER', 'NUMBER'].includes(opt_obj.type)) {
                 if (opt.min) { opt_obj.minValue = opt.min }
@@ -87,6 +213,7 @@ class Slash {
     }
 
     /**
+     * runs on command interaction
      * @param {(context: SlashContext, options: Discord.CommandInteractionOptionResolver) => {}} fn 
      */
      interact(fn) { this._interaction = fn; }
@@ -94,41 +221,95 @@ class Slash {
 
 class SlashOption extends Slash {
 
-    /**
-     * @type {SlashOptionChoice[]}
-     */
-     _choices = [];
+    /** @type {SlashOptionChoice[]} */
+     choices = [];
+
+     /** @type {ChannelType[]} */
+     channels = [];
 
     /**
-     * 
      * @param {string} name 
      * @param {string} description 
      * @param {SlashOptionType} type 
      * @param {boolean} required 
-     * @param {boolean} autocomplete
-     * @param {ChannelType[]} channels
-     * @param {number} min
-     * @param {number} max
      */
-    constructor(name, description, type, required, autocomplete, channels, min, max) {
+    constructor(name, description, type, required) {
         super(name, description);
         
         this.type = type;
         this.required = required ? true : false;
-        this.autocomplete = autocomplete ? true : false;
-
-        if (channels) { this.channels = channels }
-        if (min != undefined) { this.min = min }
-        if (max != undefined) { this.max = max }
+        this.autocomplete = false;
     }
 
     /**
      * 
+     * @param {SlashOption|SlashOption[]} opt 
+     * @return {SlashOption}
+     */
+     append(opt) {
+        if (!(opt instanceof Array)) { opt = [opt] }
+        for (let o = 0; o < opt.length; o++) { this._options.push(opt[o]) }
+        return this;
+    }
+
+    /**
+     * push a choice to the choices array
      * @param {string} name 
-     * @param {string|number} value 
+     * @param {string|number} value
+     * @return {SlashOption} 
      */
     choice(name, value) {
-        this._choices.push({ name, value });
+        this.choices.push({ name, value });
+        return this;
+    }
+    
+    /**
+     * push multiple choices to the choices array
+     * @param {{name: string, value: string|number}[]} array 
+     * @return {SlashOption}
+     */
+    choices(array) {
+        for (let a = 0; a < array.length; a++) { this.choices.push({ name: array[a].name, value: array[a].value }) }
+        return this;
+    }
+
+    /**
+     * push a `ChannelType` to the channels array
+     * @param {ChannelType} name 
+     * @return {SlashOption}
+     */
+    channel(name) {
+        this.channels.push(name);
+        return this;
+    }
+
+    /**
+     * push multiple `ChannelType`'s to the channels array
+     * @param {ChannelType[]} array 
+     * @return {SlashOption}
+     */
+    channels(array) {
+        for (let a = 0; a < array.length; a++) { this.channels.push(array[a]) }
+        return this;
+    }
+
+    /**
+     * sets the `min_value` attribute
+     * @param {number} value 
+     * @returns {SlashOption}
+     */
+    min(value) {
+        this.min = value;
+        return this;
+    }
+
+    /**
+     * sets the `max_value` attribute
+     * @param {number} value 
+     * @returns {SlashOption}
+     */
+    max(value) {
+        this.max = value;
         return this;
     }
 }
