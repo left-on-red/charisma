@@ -24,7 +24,13 @@ class Slash {
      */
     _options = [];
 
+    /**
+     * @type {Slash}
+     */
+    _parent = null;
+
     _interaction = () => {};
+    _after = null;
 
     /**
      * 
@@ -43,7 +49,31 @@ class Slash {
      */
     append(opt) {
         if (!(opt instanceof Array)) { opt = [opt] }
-        for (let o = 0; o < opt.length; o++) { this._options.push(opt[o]) }
+        for (let o = 0; o < opt.length; o++) {
+            opt[o]._parent = this;
+            this._options.push(opt[o]);
+        }
+
+        return this;
+    }
+
+    /**
+     * runs on command interaction
+     * @param {(context: SlashContext, options: Discord.CommandInteractionOptionResolver) => {}} fn 
+     * @returns {Slash}
+     */
+     interact(fn) {
+        this._interaction = fn;
+        return this;
+    }
+
+    /**
+     * runs after the execution of a command interaction
+     * @param {(context: SlashContext, options: Discord.CommandInteractionOptionResolver) => {}} fn 
+     * @returns {Slash}
+     */
+    after(fn) {
+        this._after = fn;
         return this;
     }
 
@@ -211,12 +241,6 @@ class Slash {
 
         return obj;
     }
-
-    /**
-     * runs on command interaction
-     * @param {(context: SlashContext, options: Discord.CommandInteractionOptionResolver) => {}} fn 
-     */
-     interact(fn) { this._interaction = fn; }
 }
 
 class SlashOption extends Slash {
@@ -248,7 +272,11 @@ class SlashOption extends Slash {
      */
      append(opt) {
         if (!(opt instanceof Array)) { opt = [opt] }
-        for (let o = 0; o < opt.length; o++) { this._options.push(opt[o]) }
+        for (let o = 0; o < opt.length; o++) {
+            opt[o]._parent = this;
+            this._options.push(opt[o]);
+        }
+
         return this;
     }
 

@@ -45,14 +45,18 @@ module.exports = class extends Command {
         this.push([
             { type: 'string', required: true, value: 'unregister' },
             { type: 'string', required: true, value: 'global' },
-            { type: 'slash', required: true }
+            { type: 'string', required: true }
         ], async (context, parameters) => {
             let embed = new context.Discord.MessageEmbed();
             embed.setColor(context.config.bot.accent);
 
-            let command = (await context.client.application.commands.fetch()).find(v => v.name == parameters[2]).id;
-            context.client.application.commands.delete(command);
-            embed.setDescription(`unregistered \`${parameters[2]}\` globally`);
+            let command = (await context.client.application.commands.fetch()).filter(v => v.name == parameters[2])[0]?.id;
+            if (command) {
+                context.client.application.commands.delete(command);
+                embed.setDescription(`unregistered \`${parameters[2]}\` globally`);
+            }
+
+            else { embed.setDescription(`slash command \`${parameters[2]}\` is not globally registered`) }
             
             context.channel.send({ embeds: [embed] });
         });
@@ -61,14 +65,18 @@ module.exports = class extends Command {
         this.push([
             { type: 'string', required: true, value: 'unregister' },
             { type: 'string', required: true, value: 'local' },
-            { type: 'slash', required: true }
+            { type: 'string', required: true }
         ], async (context, parameters) => {
             let embed = new context.Discord.MessageEmbed();
             embed.setColor(context.config.bot.accent);
 
-            let command = (await context.guild.commands.fetch()).find(v => v.name == parameters[2]).id;
-            context.guild.commands.delete(command);
-            embed.setDescription(`unregistered \`${parameters[2]}\` locally`);
+            let command = (await context.guild.commands.fetch()).filter(v => v.name == parameters[2])[0]?.id;
+            if (command) {
+                context.guild.commands.delete(command);
+                embed.setDescription(`unregistered \`${parameters[2]}\` locally`);
+            }
+
+            else { embed.setDescription(`slash command \`${parameters[2]}\` is not locally registered`) }
             
             context.channel.send({ embeds: [embed] });
         });

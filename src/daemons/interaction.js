@@ -34,24 +34,6 @@ module.exports = async function(context) {
             else {
         
                 function iterate(base, obj) {
-                    /*for (let b in base) {
-                        if (obj[b] == undefined) {
-                            if (base[b] instanceof Array) {
-                                obj[b] = [];
-                                for (let i = 0; i < base[b].length; i++) { obj[b].push(base[b][i]) }
-                            }
-                        }
-        
-                        else {
-                            if (typeof base[b] == 'object' && base[b] != null) {
-                                obj[b] = {};
-                                iterate(base[b], obj[b]);
-                            }
-        
-                            else { obj[b] = base[b] }
-                        }
-                    }*/
-        
                     for (let b in base) {
                         if (obj[b] == undefined) { obj[b] = clone(base[b]) }
                         else if (typeof obj[b] == 'object' && !(obj[b] instanceof Array)) { iterate(base[b], obj[b]) }
@@ -74,8 +56,48 @@ module.exports = async function(context) {
             if (context.data) { local.member = guild.members[interaction.user.id] }
 
             let slash_context = new SlashContext(context, interaction, local);
-            
-            if (context.slashes.get(interaction.commandName)) { context.slashes.get(interaction.commandName)._interaction(slash_context, interaction.options) }
+            let slash_command = context.slashes.get(interaction.commandName);
+
+            if (slash_command) {
+                let options = interaction.options;
+                let fn = slash_command._interaction;
+
+                let recur = (data, slash) => {
+                    for (let d = 0; d < data.length; d++) {
+                        for (let s = 0; s < slash.length; s++) {
+                            if (data[d].name == slash[s].name) {
+                                if (data[d].options && data[d].options.length > 0) { recur(data[d].options, slash[s]._options) }
+                                else {
+                                    fn = slash[s]._interaction;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                recur(options.data, slash_command._options);
+
+                if (fn) {
+                    if (fn.constructor.name == 'AsyncFunction') { await fn(slash_context, interaction.options) }
+                    else { fn(slash_context, interaction.options) }
+                }
+
+                let node = slash_command;
+
+                while (node != null) {
+                    if (node._after) {
+                        if (node._after.constructor.name == 'AsyncFunction') { await node._after(slash_context, interaction.options) }
+                        else { node._after(slash_context, interaction.options) }
+                    }
+
+                    node = node._parent;
+                }
+    
+                //console.log(options.data, slash_command);
+            }
+
+            //if (context.slashes.get(interaction.commandName)) { context.slashes.get(interaction.commandName)._interaction(slash_context, interaction.options) }
         }
     });
 }
