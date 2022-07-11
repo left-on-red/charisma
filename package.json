@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
+    "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.5.6",
     "ansi-colors": "^4.1.1",
     "discord-emoji-converter": "^1.0.0",
@@ -32,7 +32,6 @@
     "ytpl": "^2.0.5"
   },
   "devDependencies": {
-    "blessed": "^0.1.81",
     "chokidar": "^3.5.3"
   }
 }

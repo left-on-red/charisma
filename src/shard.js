@@ -157,8 +157,8 @@ async function start() {
     });
 
     process.on('message', async function(msg) {
-        let notify_hotswap = (str) => process.send(`NOTIFY {white-bg}{black-fg}hotswapped ${str}{/black-fg}{/white-bg}`);
-        let notify_command = (str) => process.send(`NOTIFY {red-fg}${str}{/red-fg}`);
+        let notify_hotswap = (str) => process.send(`NOTIFY hotswapped ${str}`);
+        let notify_command = (str) => process.send(`NOTIFY ${str}`);
 
         if (msg.startsWith('KILL')) {
             let reason = msg.length == 4 ? null : msg.slice(5);
