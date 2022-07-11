@@ -70,9 +70,10 @@ module.exports = class extends Command {
             let embed = new context.Discord.MessageEmbed();
             embed.setColor(context.config.bot.accent);
 
-            let command = (await context.guild.commands.fetch()).filter(v => v.name == parameters[2])[0]?.id;
+            let command = (await context.guild.commands.fetch()).filter(v => v.name == parameters[2]).first();
+
             if (command) {
-                context.guild.commands.delete(command);
+                context.guild.commands.delete(command.id);
                 embed.setDescription(`unregistered \`${parameters[2]}\` locally`);
             }
 
