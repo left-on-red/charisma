@@ -1,7 +1,11 @@
 let child_process = require('child_process');
 let fs = require('fs');
-let blessed = require('blessed');
+let http = require('http');
+
 let chokidar = require('chokidar');
+let express = require('express');
+let { Server } = require('socket.io');
+let colors = require('ansi-colors');
 
 process.stdin.setRawMode(true);
 
@@ -47,13 +51,61 @@ let hotswap_parameter = (path) => { child.send(`HOTSWAP_PARAMETER ${path}`) }
 let hotswap_slash = (path) => { child.send(`HOTSWAP_SLASH ${path}`) }
 let hotswap_module = (path) => { child.send(`HOTSWAP_MODULE ${path}`) }
 
+let banner = `
+       .__                 .__                       
+  ____ |  |__ _____ _______|__| ______ _____ _____   
+_/ ___\\|  |  \\\\__  \\\\_  __ \\  |/  ___//     \\\\__  \\  
+\\  \\___|   Y  \\/ __ \\|  | \\/  |\\___ \\|  Y Y  \\/ __ \\_
+ \\___  >___|  (____  /__|  |__/____  >__|_|  (____  /
+     \\/     \\/     \\/              \\/      \\/     \\/ 
+`
+
+let sleep = (ms) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => { resolve() }, ms);
+    });
+}
+
+let socket_log = async (socket, msg, wrapper) => {
+    
+    let arr = msg.split('\n');
+    for (let a = 0; a < arr.length; a++) {
+        if (wrapper) { arr[a] = wrapper(arr[a]) }
+        socket.emit('LOG', arr[a]);
+    }
+}
+
 child.on('message', function(msg) {
+    let io;
+    
     if (msg == 'KILL') { process.exit() }
     else if (msg == 'READY') {
         chokidar.watch(commands).on('change', (path) => hotswap_command(path));
         chokidar.watch(parameters).on('change', (path) => hotswap_parameter(path));
         chokidar.watch(slashes).on('change', (path) => hotswap_slash(path));
         chokidar.watch(modules).on('change', (path) => hotswap_module(path));
+
+        let app = express();
+        app.get('/', (request, response) => { response.send(fs.readFileSync('./src/web.html').toString()) });
+
+        let server = http.createServer(app)
+        io = new Server(server);
+
+        io.on('connection', (socket) => {
+            console.log(`socket connected: ${socket.id}`);
+            socket.on('disconnect', () => { console.log(`socket disconnected: ${socket.id}`) });
+
+            socket.on('CMD', (cmd) => {
+                
+                //socket.emit('LOG', `got command ${colors.green(cmd)} ${colors.greenBright(cmd)}`);
+            });
+
+            socket.on('BANNER', () => {
+                socket.emit('LOG', `${colors.cyanBright(banner)}\n${colors.yellowBright(`designed, written, and maintained by ${colors.redBright('red;#0531')}`)}`);
+            });
+        });
+
+        server.listen(80, () => { console.log('started express server') });
     }
 
     else if (msg.startsWith('NOTIFY')) {
@@ -81,8 +133,6 @@ child.on('message', function(msg) {
         chokidar.watch(str).on('change', (path) => hotswap_module(path));
     }
 });
-dbproc.on('exit', function() { child.send('KILL rethink database process terminated unexpectedly...') });
 
-process.on('SIGINT', () => {
-    child.send('KILL');
-});
+dbproc.on('exit', function() { child.send('KILL rethink database process terminated unexpectedly...') });
+process.on('SIGINT', () => { child.send('KILL') });

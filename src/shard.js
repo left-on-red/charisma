@@ -1,9 +1,9 @@
-let Discord = require('discord.js');
-let ansi = require('ansi-colors');
 let fs = require('fs');
 
-let AssetManager = require('./core/AssetManager.js');
+let Discord = require('discord.js');
+let ansi = require('ansi-colors');
 
+let AssetManager = require('./core/AssetManager.js');
 let BotContext = require('./core/BotContext.js');
 
 let js_file = /\.[0-9a-z]+$/i;
