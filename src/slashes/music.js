@@ -335,7 +335,7 @@ module.exports = class extends Slash {
             if (options.getSubcommand() != 'jukebox') {
                 setTimeout(() => {
                     // deletes reply after 10s if not ephemeral and jukebox is active (excludes actual /jukebox command)
-                    if (!context.interaction.ephemeral && context.music.jukeboxes.get(context.guild.id).message) { context.deleteReply() }
+                    if (!context.interaction.ephemeral && context.music.jukeboxes.get(context.guild.id) && context.music.jukeboxes.get(context.guild.id).message) { context.deleteReply() }
                 }, 10000);
             }
         });
