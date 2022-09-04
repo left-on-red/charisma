@@ -61,7 +61,7 @@ module.exports = {
                 permissions: ['BOT.MASTER'],
                 type: 'string',
                 function: async function(input, imports) {
-                    await imports.client.user.setPresence({ activity: { name: input }, status: 'online' });
+                    await imports.client.user.setPresence({ activities: [{ name: input }], status: 'online' });
                     return `"playing **${input}**"`;
                 }
             }
