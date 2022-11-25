@@ -7,6 +7,10 @@ let express = require('express');
 let { Server } = require('socket.io');
 let colors = require('ansi-colors');
 
+let args = process.argv;
+args.shift();
+args.shift();
+
 process.stdin.setRawMode(true);
 
 if (process.platform == 'win32') {
@@ -80,10 +84,12 @@ child.on('message', function(msg) {
     
     if (msg == 'KILL') { process.exit() }
     else if (msg == 'READY') {
-        chokidar.watch(commands).on('change', (path) => hotswap_command(path));
-        chokidar.watch(parameters).on('change', (path) => hotswap_parameter(path));
-        chokidar.watch(slashes).on('change', (path) => hotswap_slash(path));
-        chokidar.watch(modules).on('change', (path) => hotswap_module(path));
+        if (args.includes('--dev')) {
+            chokidar.watch(commands).on('change', (path) => hotswap_command(path));
+            chokidar.watch(parameters).on('change', (path) => hotswap_parameter(path));
+            chokidar.watch(slashes).on('change', (path) => hotswap_slash(path));
+            chokidar.watch(modules).on('change', (path) => hotswap_module(path));
+        }
 
         let app = express();
         app.get('/', (request, response) => { response.send(fs.readFileSync('./src/web.html').toString()) });
@@ -91,13 +97,36 @@ child.on('message', function(msg) {
         let server = http.createServer(app)
         io = new Server(server);
 
+        let sockets = new Map();
+
         io.on('connection', (socket) => {
             console.log(`socket connected: ${socket.id}`);
-            socket.on('disconnect', () => { console.log(`socket disconnected: ${socket.id}`) });
+            
+            sockets.set(socket.id, socket);
+
+            socket.on('disconnect', () => {
+                console.log(`socket disconnected: ${socket.id}`);
+                sockets.delete(socket.id);
+            });
 
             socket.on('CMD', (cmd) => {
-                
-                //socket.emit('LOG', `got command ${colors.green(cmd)} ${colors.greenBright(cmd)}`);
+
+                socket.emit('LOG', `${colors.greenBright('>')} ${cmd}`);
+
+                let name = cmd.includes(' ') ? cmd.split(' ')[0] : cmd;
+                let rest = cmd.slice(name.length).trim();
+                let strings = rest.match(/("([^"]|"")*")/g);
+                rest = rest.replace(/("([^"]|"")*")/g, '[s]').split(' ');
+                let args = [];
+
+                for (let r = 0; r < rest.length; r++) {
+                    if (rest[r] == '[s]') { args.push(strings.shift().slice(1, -1)) }
+                    else { args.push(rest[r]) }
+                }
+
+                if (name == 'echo') {
+                    socket.emit('LOG', args.join(' '));    
+                }
             });
 
             socket.on('BANNER', () => {
