@@ -32,7 +32,6 @@ module.exports = async function(context) {
             }
         
             else {
-        
                 function iterate(base, obj) {
                     for (let b in base) {
                         if (obj[b] == undefined) { obj[b] = clone(base[b]) }
