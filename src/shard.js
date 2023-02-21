@@ -134,7 +134,7 @@ let load = {
 async function start() {
     client.on('ready', async function() {
         // disconnects from any voice channels (if she's in any)
-        // for (let c = 0; c < client.voice.connections.array().length; c++) { client.voice.connections.array()[c].disconnect() }
+        for (let c = 0; c < client.voice.connections.array().length; c++) { client.voice.connections.array()[c].disconnect() }
 
         context.system.info(await load.commands());
         context.system.info(await load.daemons());
